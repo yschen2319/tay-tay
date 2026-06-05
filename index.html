@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="image" href="./assets/era-path-hero.png" />
+    <title>十二个时代，一个不断书写的我</title>
+    <meta
+      name="description"
+      content="一个按 Taylor Swift 原创录音室专辑顺序展开的故事型中文网站，解析专辑颜色、歌词主题、真实经历与情感轨迹。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="rail" aria-label="专辑导航">
+      <button class="palette-toggle" type="button" aria-label="打开专辑调色盘" aria-expanded="false">
+        <span></span>
+      </button>
+      <a class="brand" href="#top">
+        <span>TAYLOR SWIFT</span>
+        <strong>时间与歌词的编年史</strong>
+      </a>
+      <nav id="albumRail" class="album-rail"></nav>
+      <div class="rail-tools">
+        <a href="#songIndex">曲目索引</a>
+        <a href="#sources">资料来源</a>
+      </div>
+    </aside>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-art" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="micro">从 2006 到 2025，十二张原创录音室专辑</p>
+          <h1 id="hero-title">十二个时代，<span>一个不断书写的我</span></h1>
+          <p class="lead">
+            这不是“谁写给谁”的八卦表，而是一条更适合 Swiftie 慢慢走的故事线：
+            每张专辑都有自己的颜色、叙事口吻、生活背景和情感重心。热门歌负责把时代推向世界，
+            深藏曲负责留下真正的心跳。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#album-taylor-swift">开始第一章</a>
+            <a class="button secondary" href="#heroMap">选择专辑</a>
+          </div>
+        </div>
+        <div class="hero-map" id="heroMap" aria-label="专辑时间线"></div>
+      </section>
+
+      <section id="method" class="method section-pad">
+        <div>
+          <h2>阅读方式</h2>
+          <p>
+            本站现在读取你本地提供的英文歌词包，把完整歌词放在每首歌的独立弹窗里；右侧分析仍然只做歌词意象、叙事结构和公开背景的整合解读。
+            “真实锚点”来自公开报道、官方发布、颁奖与访谈资料；“情感读法”是基于文本和时代语境的分析。
+          </p>
+        </div>
+        <div class="method-grid">
+          <article>
+            <span>01</span>
+            <h3>颜色先行</h3>
+            <p>每张专辑用对应时代颜色铺底，让你一眼知道情绪温度：绿色、金色、紫色、红色、蓝色，直到橙色舞台灯。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>热门与深藏并读</h3>
+            <p>每章都挑出代表性大热歌和粉丝常回访的非主打，分析它们如何共同构成同一个时期的内心地图。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>生活不是旁白</h3>
+            <p>搬去 Nashville、VMA 风波、媒体围剿、版权之争、疫情写作、Eras Tour 和新生活，都被放回创作脉络里。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="album-stage" id="albums" aria-label="专辑故事线"></section>
+
+      <section id="songIndex" class="song-index section-pad">
+        <div class="section-heading">
+          <h2>曲目索引</h2>
+          <p>可以按“热门歌”或“深藏曲”筛选，快速回到每个时代的情绪入口。</p>
+        </div>
+        <div class="filters" role="group" aria-label="曲目筛选">
+          <button class="filter active" data-filter="all">全部</button>
+          <button class="filter" data-filter="hit">热门歌</button>
+          <button class="filter" data-filter="deep">深藏曲</button>
+        </div>
+        <div id="songList" class="song-list"></div>
+      </section>
+
+      <section id="sources" class="sources section-pad">
+        <div class="section-heading">
+          <h2>资料来源</h2>
+          <p>已联网核对到 2026-06-04。页面分析为整合性解读，资料链接供继续阅读。</p>
+        </div>
+        <ol>
+          <li><a href="https://www.taylorswift.com/" target="_blank" rel="noreferrer">Taylor Swift 官方网站</a></li>
+          <li><a href="https://www.britannica.com/biography/Taylor-Swift" target="_blank" rel="noreferrer">Britannica: Taylor Swift biography</a></li>
+          <li><a href="https://www.grammy.com/news/taylor-swift-albums-guide-eras-discography" target="_blank" rel="noreferrer">GRAMMY.com: era-by-era album guide</a></li>
+          <li><a href="https://www.grammy.com/news/taylor-swift-new-album-midnights-details-everything-we-know-cover-release-date-tracklist-pre-order-vmas-speech-2022" target="_blank" rel="noreferrer">GRAMMY.com: Midnights announcement context</a></li>
+          <li><a href="https://www.grammy.com/news/taylor-swift-folklore-2021-grammys" target="_blank" rel="noreferrer">GRAMMY.com: Road to folklore</a></li>
+          <li><a href="https://apnews.com/article/c4262686b5b68ee210f7571b8716ab51" target="_blank" rel="noreferrer">AP News: The Life of a Showgirl announcement and tracklist</a></li>
+          <li><a href="https://apnews.com/article/3a64afd94014fd6aa22436f5132acccc" target="_blank" rel="noreferrer">AP News: The Life of a Showgirl first-week record</a></li>
+          <li><a href="https://apnews.com/article/d585627eb98b69428ce206a2c8a9cb7d" target="_blank" rel="noreferrer">AP News: Taylor Swift and Travis Kelce engagement</a></li>
+          <li><a href="https://apnews.com/article/672dc24782f5b0f04c864a6fd86665d8" target="_blank" rel="noreferrer">AP News: Swift regains control of first six albums</a></li>
+          <li><a href="https://www.npr.org/2025/05/30/nx-s1-5418039/taylor-swift-masters-rights-big-machine" target="_blank" rel="noreferrer">NPR: masters rights background</a></li>
+        </ol>
+        <p class="rights-note">
+          歌词与音乐版权归相应权利方所有。本地页面使用你提供的歌词包进行个人阅读与整理。
+          视觉资产为本项目生成的原创时代路径图，不使用真人肖像或官方专辑封面。
+        </p>
+      </section>
+    </main>
+
+    <script src="./lyrics.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
