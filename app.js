@@ -1974,6 +1974,45 @@ renderSongIndex();
 bindFilters();
 bindPalette();
 
+function bindMobileDockAutoHide() {
+  const mobileQuery = window.matchMedia("(max-width: 720px)");
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function updateDock() {
+    ticking = false;
+    if (!mobileQuery.matches || document.body.classList.contains("modal-open")) {
+      document.body.classList.remove("dock-hidden");
+      lastY = window.scrollY;
+      return;
+    }
+
+    const currentY = window.scrollY;
+    const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const scrollingDown = currentY > lastY + 10;
+    const nearTop = currentY < 220;
+    const nearBottom = maxY - currentY < 260;
+
+    document.body.classList.toggle("dock-hidden", scrollingDown && !nearTop && !nearBottom);
+    lastY = currentY;
+  }
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateDock);
+      }
+    },
+    { passive: true }
+  );
+  mobileQuery.addEventListener?.("change", updateDock);
+  updateDock();
+}
+
+bindMobileDockAutoHide();
+
 window.addEventListener("hashchange", () => {
   if (window.location.hash.startsWith("#album-")) {
     selectAlbum(getAlbumIndexFromHash(), { fromHash: true });
