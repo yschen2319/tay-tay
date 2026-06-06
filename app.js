@@ -933,6 +933,30 @@ let currentFilter = "all";
 let currentReadingIndex = 0;
 let activeAlbumSection = "guide";
 const readingIndexByAlbum = {};
+let applyingHistoryState = false;
+
+const landingCopy = {
+  micro: "2006 - 2025 / 原创录音室专辑",
+  title: "泰勒的12张专辑",
+  lead: "沿着封面里的时间长河点选圆点：每一种颜色对应一个时代，每一张专辑都是一章。",
+  primary: "从第一张开始",
+  secondary: "点选时间长河"
+};
+
+const heroMapPositions = [
+  { x: 20, y: 78, mx: 20, my: 78 },
+  { x: 32, y: 82, mx: 32, my: 82 },
+  { x: 44, y: 76, mx: 44, my: 76 },
+  { x: 56, y: 70, mx: 56, my: 70 },
+  { x: 68, y: 64, mx: 68, my: 64 },
+  { x: 78, y: 56, mx: 78, my: 56 },
+  { x: 74, y: 48, mx: 74, my: 48 },
+  { x: 62, y: 42, mx: 62, my: 42 },
+  { x: 68, y: 34, mx: 68, my: 34 },
+  { x: 76, y: 32, mx: 76, my: 32 },
+  { x: 78, y: 40, mx: 78, my: 40 },
+  { x: 66, y: 56, mx: 66, my: 56 }
+];
 
 const albumCovers = {
   "taylor-swift": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/be/e1/48/bee148d6-d16c-d8f7-0173-d6cf6d684aa1/08PNDIM00678.rgb.jpg/600x600bb.jpg",
@@ -1063,7 +1087,7 @@ renderRail = function () {
   homeLink.addEventListener("click", (event) => {
     event.preventDefault();
     closePalette();
-    showLanding();
+    showLanding({ pushHistory: true });
   });
   rail.appendChild(homeLink);
 
@@ -1103,10 +1127,17 @@ renderRail = function () {
 
     if (map) {
       const mapLink = document.createElement("a");
+      const position = heroMapPositions[index] || { x: 50, y: 50, mx: 50, my: 50 };
       mapLink.className = "map-item";
       mapLink.href = `#album-${album.id}`;
       mapLink.dataset.album = album.id;
+      mapLink.dataset.label = `${album.title} / ${album.year}`;
       mapLink.style.setProperty("--era", album.color);
+      mapLink.style.setProperty("--map-x", `${position.x}%`);
+      mapLink.style.setProperty("--map-y", `${position.y}%`);
+      mapLink.style.setProperty("--map-mobile-x", `${position.mx}%`);
+      mapLink.style.setProperty("--map-mobile-y", `${position.my}%`);
+      mapLink.setAttribute("aria-label", `${album.title} ${album.year}`);
       mapLink.innerHTML = `<span></span><strong>${album.title}</strong><small>${album.year}</small>`;
       mapLink.addEventListener("click", (event) => {
         event.preventDefault();
@@ -1139,7 +1170,72 @@ renderAlbums = function () {
   showLanding();
 };
 
-function showLanding() {
+function applyLandingCopy() {
+  const micro = document.querySelector(".hero .micro");
+  const title = document.querySelector("#hero-title");
+  const lead = document.querySelector(".hero .lead");
+  const primary = document.querySelector(".hero-actions .button.primary");
+  const secondary = document.querySelector(".hero-actions .button.secondary");
+
+  if (micro) micro.textContent = landingCopy.micro;
+  if (title) title.textContent = landingCopy.title;
+  if (lead) lead.textContent = landingCopy.lead;
+  if (primary) primary.textContent = landingCopy.primary;
+  if (secondary) secondary.textContent = landingCopy.secondary;
+}
+
+function appHistoryState(view = "landing", albumIndex = currentAlbumIndex, section = activeAlbumSection) {
+  const album = albums[albumIndex] || albums[0];
+  return {
+    swiftStory: true,
+    view,
+    album: album?.id || albums[0].id,
+    section: section || "guide"
+  };
+}
+
+function replaceAppHistory(state, url) {
+  if (window.history?.replaceState) {
+    history.replaceState(state, "", url);
+  }
+}
+
+function pushAppHistory(state, url) {
+  if (!applyingHistoryState && window.history?.pushState) {
+    history.pushState(state, "", url);
+  }
+}
+
+function applyRouteState(state) {
+  applyingHistoryState = true;
+  if (state?.view === "album") {
+    const index = albums.findIndex((album) => album.id === state.album);
+    currentAlbumIndex = index >= 0 ? index : 0;
+    activeAlbumSection = state.section || "guide";
+    currentFilter = "all";
+    renderCurrentAlbum();
+    requestAnimationFrame(() => {
+      const target = document.querySelector("#albums");
+      if (target) window.scrollTo({ top: target.offsetTop, behavior: "auto" });
+    });
+  } else {
+    showLanding({ preserveHistory: true });
+  }
+  applyingHistoryState = false;
+}
+
+function initializeHistoryState() {
+  const hash = window.location.hash;
+  if (hash.startsWith("#album-")) {
+    const index = getAlbumIndexFromHash();
+    replaceAppHistory(appHistoryState("album", index, activeAlbumSection), `#album-${albums[index].id}`);
+  } else {
+    replaceAppHistory(appHistoryState("landing"), window.location.pathname + window.location.search);
+  }
+}
+
+function showLanding(options = {}) {
+  applyLandingCopy();
   const stage = document.querySelector("#albums");
   document.body.classList.add("landing-mode");
   document.body.classList.remove("album-mode", "album-hub-mode", "album-section-mode", "modal-open", "reading-open");
@@ -1153,8 +1249,13 @@ function showLanding() {
     item.classList.remove("active", "preview");
     item.dataset.preview = "false";
   });
-  if (window.location.hash.startsWith("#album-")) {
-    history.replaceState(null, "", window.location.pathname);
+  if (!options.preserveHistory) {
+    const landingUrl = window.location.pathname + window.location.search;
+    if (options.pushHistory) {
+      pushAppHistory(appHistoryState("landing"), landingUrl);
+    } else if (window.location.hash.startsWith("#album-")) {
+      replaceAppHistory(appHistoryState("landing"), landingUrl);
+    }
   }
   requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
 }
@@ -1541,6 +1642,7 @@ renderCurrentAlbum = function () {
     button.addEventListener("click", () => {
       activeAlbumSection = button.dataset.albumSection;
       renderCurrentAlbum();
+      pushAppHistory(appHistoryState("album", currentAlbumIndex, activeAlbumSection), `#album-${albums[currentAlbumIndex].id}`);
       requestAnimationFrame(() => window.scrollTo({ top: stage.offsetTop, behavior: "auto" }));
     });
   });
@@ -1549,12 +1651,13 @@ renderCurrentAlbum = function () {
     button.addEventListener("click", () => {
       activeAlbumSection = "guide";
       renderCurrentAlbum();
+      replaceAppHistory(appHistoryState("album", currentAlbumIndex, activeAlbumSection), `#album-${albums[currentAlbumIndex].id}`);
       requestAnimationFrame(() => window.scrollTo({ top: stage.offsetTop, behavior: "auto" }));
     });
   });
 
   stage.querySelectorAll("[data-home-page]").forEach((button) => {
-    button.addEventListener("click", showLanding);
+    button.addEventListener("click", () => showLanding({ pushHistory: true }));
   });
 
   stage.querySelectorAll("[data-switch]").forEach((button) => {
@@ -1629,8 +1732,8 @@ function selectAlbum(index, options = {}) {
     item.classList.toggle("active", item.dataset.filter === "all");
   });
   renderCurrentAlbum();
-  if (!options.fromHash) {
-    history.replaceState(null, "", `#album-${album.id}`);
+  if (!options.fromHash && !options.skipHistory) {
+    pushAppHistory(appHistoryState("album", currentAlbumIndex, activeAlbumSection), `#album-${album.id}`);
   }
   if (!options.skipScroll) {
     requestAnimationFrame(() => {
@@ -2351,6 +2454,7 @@ renderSongIndex = function (filter = "all") {
 };
 renderRail();
 renderAlbums();
+initializeHistoryState();
 renderSongIndex();
 bindFilters();
 bindPalette();
@@ -2394,10 +2498,21 @@ function bindMobileDockAutoHide() {
 
 bindMobileDockAutoHide();
 
+window.addEventListener("popstate", (event) => {
+  const state = event.state;
+  if (state?.swiftStory) {
+    applyRouteState(state);
+  } else if (window.location.hash.startsWith("#album-")) {
+    selectAlbum(getAlbumIndexFromHash(), { fromHash: true, skipScroll: true, skipHistory: true });
+  } else {
+    showLanding({ preserveHistory: true });
+  }
+});
+
 window.addEventListener("hashchange", () => {
   if (window.location.hash.startsWith("#album-")) {
-    selectAlbum(getAlbumIndexFromHash(), { fromHash: true });
+    selectAlbum(getAlbumIndexFromHash(), { fromHash: true, skipHistory: true });
   } else if (!window.location.hash || window.location.hash === "#top") {
-    showLanding();
+    showLanding({ preserveHistory: true });
   }
 });
