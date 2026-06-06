@@ -931,6 +931,7 @@ function slug(value) {
 let currentAlbumIndex = 0;
 let currentFilter = "all";
 let currentReadingIndex = 0;
+let activeAlbumSection = "guide";
 const readingIndexByAlbum = {};
 
 const albumCovers = {
@@ -1141,7 +1142,7 @@ renderAlbums = function () {
 function showLanding() {
   const stage = document.querySelector("#albums");
   document.body.classList.add("landing-mode");
-  document.body.classList.remove("album-mode", "modal-open", "reading-open");
+  document.body.classList.remove("album-mode", "album-hub-mode", "album-section-mode", "modal-open", "reading-open");
   document.body.style.removeProperty("--era");
   delete document.body.dataset.album;
   if (stage) {
@@ -1156,6 +1157,271 @@ function showLanding() {
     history.replaceState(null, "", window.location.pathname);
   }
   requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
+}
+
+const albumDirectorySections = [
+  { key: "reading", title: "专辑讲解", subtitle: "走进专辑的故事", icon: "book" },
+  { key: "timeline", title: "时间线", subtitle: "重要时刻与旅程", icon: "hourglass" },
+  { key: "tracklist", title: "全部曲目", subtitle: "全部收录与试听", icon: "disc" }
+];
+
+function sectionByKey(key) {
+  return albumDirectorySections.find((section) => section.key === key) || albumDirectorySections[0];
+}
+
+function renderDirectoryIcon(icon) {
+  const paths = {
+    back: `<path d="m15 5-7 7 7 7"/>`,
+    book: `<path d="M5 5.5c3.4-.6 5.7.2 7 2.1v13.2c-1.3-1.5-3.6-2.1-7-1.6z"/><path d="M19 5.5c-3.4-.6-5.7.2-7 2.1v13.2c1.3-1.5 3.6-2.1 7-1.6z"/><path d="M12 7.6v13.2"/>`,
+    note: `<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>`,
+    disc: `<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/><path d="M12 4a8 8 0 0 1 8 8"/>`,
+    feather: `<path d="M20 4c-7.5.4-12.2 3.5-14 9.3-.8 2.5-1 4.7-.7 6.7 1.8.2 4-.3 6.5-1.5 5.6-2.8 8.4-7.6 8.2-14.5z"/><path d="M5.4 19.8 14 11"/><path d="M9.5 16.1H6.2"/><path d="M12.2 13.3H8.8"/>`,
+    heart: `<path d="M20.2 5.9c-1.8-2-4.7-2-6.5-.1L12 7.5l-1.7-1.7c-1.8-1.9-4.7-1.9-6.5.1-1.9 2.1-1.7 5.3.4 7.3l7.8 7.1 7.8-7.1c2.1-2 2.3-5.2.4-7.3z"/>`,
+    hourglass: `<path d="M6 3h12"/><path d="M6 21h12"/><path d="M8 3c0 4 2.5 5.8 4 8 1.5-2.2 4-4 4-8"/><path d="M8 21c0-4 2.5-5.8 4-8 1.5 2.2 4 4 4 8"/>`
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[icon] || paths.book}</svg>`;
+}
+
+function renderAlbumSwitchDock(prev, album, next) {
+  return `
+    <nav class="album-switch-dock" style="--era:${album.color}" aria-label="专辑切换">
+      <button type="button" data-switch="-1">
+        <span class="switch-thumb"><img src="${albumCovers[prev.id] || ""}" alt="" loading="lazy" /></span>
+        <span class="switch-copy"><small>上一张</small><strong>${prev.title}</strong></span>
+      </button>
+      <button class="album-switch-dock__current" type="button" data-open-palette>
+        <span class="switch-thumb"><img src="${albumCovers[album.id] || ""}" alt="" loading="lazy" /></span>
+        <span class="switch-copy"><small>当前专辑</small><strong>${String(currentAlbumIndex + 1).padStart(2, "0")} / ${albums.length}</strong></span>
+      </button>
+      <button type="button" data-switch="1">
+        <span class="switch-copy"><small>下一张</small><strong>${next.title}</strong></span>
+        <span class="switch-thumb"><img src="${albumCovers[next.id] || ""}" alt="" loading="lazy" /></span>
+      </button>
+    </nav>
+  `;
+}
+
+function renderAlbumGuide(album, prev, next) {
+  const directorySections = albumDirectorySections.map((section) =>
+    section.key === "reading" ? { ...section, subtitle: `走进《${album.title}》的故事` } : section
+  );
+  return `
+    <article class="album album-guide" id="album-${album.id}" style="--era:${album.color}; --cover:url('${albumCovers[album.id] || ""}')">
+      <div class="album-atmosphere" aria-hidden="true"></div>
+      <div class="album-guide__wash" aria-hidden="true"></div>
+      <div class="album-guide__top">
+        <div class="album-guide__nav">
+          <button class="album-guide__back" type="button" data-home-page aria-label="回到首页">${renderDirectoryIcon("back")}</button>
+          <button class="album-guide__heart" type="button" data-open-palette aria-label="打开专辑导航">${renderDirectoryIcon("heart")}</button>
+        </div>
+        <p class="album-guide__label">Taylor Swift</p>
+        <h2>${album.title}</h2>
+        <p class="album-guide__meta">${album.year} · ${album.genre}</p>
+        <div class="album-guide__cover-wrap">
+          <figure class="album-guide__cover">
+            <img src="${albumCovers[album.id] || ""}" alt="${album.title} 专辑封面" loading="eager" fetchpriority="high" decoding="async" />
+          </figure>
+          <div class="album-guide__vinyl" aria-hidden="true"></div>
+        </div>
+        <blockquote>${album.thesis}</blockquote>
+      </div>
+      <section class="album-directory" aria-label="${escapeHtml(album.title)} 专辑导览">
+        <div class="album-directory__title">
+          <span></span>
+          <strong>专辑导览</strong>
+        </div>
+        <div class="album-directory__cards">
+          ${directorySections
+            .map(
+              (section) => `
+                <button class="directory-card directory-card--${section.key}" type="button" data-album-section="${section.key}">
+                  <span class="directory-card__icon">${renderDirectoryIcon(section.icon)}</span>
+                  <span class="directory-card__copy">
+                    <strong>${section.title}</strong>
+                    <small>${section.subtitle}</small>
+                  </span>
+                  <span class="directory-card__arrow">→</span>
+                </button>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+      ${renderAlbumSwitchDock(prev, album, next)}
+    </article>
+  `;
+}
+
+function getTrackTitlesWithGroups(album) {
+  const list = completeTracklists[album.id] || { core: [], expanded: [] };
+  return [
+    ...list.core.map((title, index) => ({ title, index: index + 1, group: "标准/主线" })),
+    ...list.expanded.map((title, index) => ({ title, index: list.core.length + index + 1, group: "豪华/扩展" }))
+  ];
+}
+
+function renderLyricsRoom(album) {
+  const tracks = getTrackTitlesWithGroups(album);
+  return `
+    <section class="lyrics-room">
+      <div class="tracklist-heading">
+        <h3>歌词房间</h3>
+        <p>从任意一首歌进入独立阅读窗，先看歌词，再切到解读。</p>
+      </div>
+      <div class="lyrics-room__grid">
+        ${tracks
+          .map(
+            (row) => `
+              <button class="lyrics-room__song song-open-row" type="button" data-song-title="${escapeHtml(row.title)}">
+                <span>${String(row.index).padStart(2, "0")}</span>
+                <strong>${escapeHtml(row.title)}</strong>
+                <small>${row.group} · ${trackStatus(album, row.title)}</small>
+              </button>
+            `
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderReadingPortal(album) {
+  const reading = albumReadings[album.id];
+  if (!reading) return "";
+  return `
+    <section class="reading-portal">
+      <div class="reading-portal__intro">
+        <p class="era-thesis">${album.thesis}</p>
+        <div class="era-narrative">
+          <p>${album.context}</p>
+          <p>${album.life}</p>
+        </div>
+      </div>
+      <div class="reading-portal__grid" aria-label="${escapeHtml(album.title)} 专辑解读章节">
+        ${reading.lenses
+          .map(
+            (item, index) => `
+              <button class="reading-entry" type="button" data-reading-card="${index}">
+                <span>${String(index + 1).padStart(2, "0")}</span>
+                <small>${escapeHtml(item.label)}</small>
+                <strong>${escapeHtml(item.title)}</strong>
+                <em>进入阅读</em>
+              </button>
+            `
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function buildTimelineMoments(album) {
+  const reading = albumReadings[album.id];
+  const stages = ["起点", "转折", "成形", "回声", "余波"];
+  return album.timeline.map(([date, text], index) => {
+    const lens = reading?.lenses[index % reading.lenses.length];
+    const hit = album.hits[index % album.hits.length];
+    const deep = album.deeps[index % album.deeps.length];
+    const isFirst = index === 0;
+    const isLast = index === album.timeline.length - 1;
+    let reflection = `${lens?.title || album.thesis} 这不是孤立事件，而是把公众处境、创作选择和歌曲叙事推到同一条线上的关键一格。`;
+    if (isFirst) {
+      reflection = `这个节点解释了《${album.title}》为什么会以这种颜色开始：${album.context}`;
+    }
+    if (isLast) {
+      reflection = `这一刻把时代的结果留了下来。再回听《${hit.title}》和《${deep.title}》，能听见它怎样把私人经验变成长期回声。`;
+    }
+    return {
+      date,
+      text,
+      stage: stages[index % stages.length],
+      anchor: hit?.title || deep?.title,
+      reflection
+    };
+  });
+}
+
+function renderExpandedTimeline(album) {
+  const moments = buildTimelineMoments(album);
+  return `
+    <section class="timeline-panel timeline-panel--deep">
+      <div class="tracklist-heading timeline-heading">
+        <h3>时间线</h3>
+        <p>不只记录日期，也把每个节点放回创作、公众叙事和歌曲文本之间看。</p>
+      </div>
+      <div class="timeline-story">
+        ${moments
+          .map(
+            (moment, index) => `
+              <article class="timeline-moment">
+                <div class="timeline-moment__date">
+                  <span>${String(index + 1).padStart(2, "0")}</span>
+                  <strong>${escapeHtml(moment.date)}</strong>
+                </div>
+                <div class="timeline-moment__body">
+                  <small>${escapeHtml(moment.stage)}</small>
+                  <h4>${escapeHtml(moment.text)}</h4>
+                  <p>${escapeHtml(moment.reflection)}</p>
+                  ${
+                    moment.anchor
+                      ? `<button class="timeline-song-link song-open-row" type="button" data-song-title="${escapeHtml(moment.anchor)}">关联歌曲：${escapeHtml(moment.anchor)}</button>`
+                      : ""
+                  }
+                </div>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+      <aside class="timeline-coda">
+        <strong>这条线怎么读</strong>
+        <p>${album.thesis} 时间线不是背景补充，而是帮助你判断：哪些歌是在回应处境，哪些歌是在重写处境。</p>
+      </aside>
+    </section>
+  `;
+}
+
+function renderAlbumSection(album) {
+  const section = sectionByKey(activeAlbumSection);
+  const content =
+    section.key === "reading"
+      ? renderReadingPortal(album)
+      : section.key === "tracklist"
+        ? renderCompleteTracklist(album)
+        : renderExpandedTimeline(album);
+  const isCompactSection = section.key === "tracklist" || section.key === "timeline";
+  const compactNav =
+    isCompactSection
+      ? `<div class="album-section__compact-nav">
+          <button class="album-section__back" type="button" data-back-to-guide>${renderDirectoryIcon("back")}<span>返回导览</span></button>
+          <p>${album.title}</p>
+        </div>`
+      : "";
+  const header =
+    isCompactSection
+      ? ""
+      : `<header class="album-section__header">
+          <button class="album-section__back" type="button" data-back-to-guide>${renderDirectoryIcon("book")}<span>返回导览</span></button>
+          <div>
+            <p>${album.title}</p>
+            <h2>${section.title}</h2>
+            <small>${section.subtitle}</small>
+          </div>
+          <figure>
+            <img src="${albumCovers[album.id] || ""}" alt="${album.title} 专辑封面" loading="lazy" />
+          </figure>
+        </header>`;
+
+  return `
+    <article class="album album-section album-section--${section.key}" id="album-${album.id}" style="--era:${album.color}; --cover:url('${albumCovers[album.id] || ""}')">
+      <div class="album-atmosphere" aria-hidden="true"></div>
+      ${header}
+      <div class="album-section__body">
+        ${compactNav}
+        ${content}
+      </div>
+    </article>
+  `;
 }
 
 function renderCurrentAlbum() {
@@ -1254,6 +1520,68 @@ function renderCurrentAlbum() {
   bindReadingOpeners(stage, album);
 }
 
+renderCurrentAlbum = function () {
+  const stage = document.querySelector("#albums");
+  const album = albums[currentAlbumIndex];
+  const prev = albums[(currentAlbumIndex - 1 + albums.length) % albums.length];
+  const next = albums[(currentAlbumIndex + 1) % albums.length];
+
+  document.body.style.setProperty("--era", album.color);
+  document.body.dataset.album = album.id;
+  document.body.classList.remove("landing-mode", "reading-open");
+  document.body.classList.add("album-mode");
+  document.body.classList.toggle("album-hub-mode", activeAlbumSection === "guide");
+  document.body.classList.toggle("album-section-mode", activeAlbumSection !== "guide");
+  stage.style.setProperty("--era", album.color);
+  document.querySelector("#songIndex")?.style.setProperty("--era", album.color);
+
+  stage.innerHTML = activeAlbumSection === "guide" ? renderAlbumGuide(album, prev, next) : renderAlbumSection(album);
+
+  stage.querySelectorAll("[data-album-section]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeAlbumSection = button.dataset.albumSection;
+      renderCurrentAlbum();
+      requestAnimationFrame(() => window.scrollTo({ top: stage.offsetTop, behavior: "auto" }));
+    });
+  });
+
+  stage.querySelectorAll("[data-back-to-guide]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeAlbumSection = "guide";
+      renderCurrentAlbum();
+      requestAnimationFrame(() => window.scrollTo({ top: stage.offsetTop, behavior: "auto" }));
+    });
+  });
+
+  stage.querySelectorAll("[data-home-page]").forEach((button) => {
+    button.addEventListener("click", showLanding);
+  });
+
+  stage.querySelectorAll("[data-switch]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeAlbumSection = "guide";
+      selectAlbum(currentAlbumIndex + Number(button.dataset.switch));
+    });
+  });
+
+  stage.querySelectorAll("[data-open-palette]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openPalette();
+    });
+  });
+
+  document.querySelectorAll("[data-album]").forEach((item) => {
+    item.classList.toggle("active", item.dataset.album === album.id);
+  });
+
+  renderSongIndex(currentFilter);
+  bindSongOpeners(stage);
+  bindEraRituals(stage, album);
+  bindReadingPortal(stage, album);
+  bindReadingOpeners(stage, album);
+};
+
 renderSongIndex = function (filter = "all") {
   currentFilter = filter;
   const list = document.querySelector("#songList");
@@ -1295,6 +1623,7 @@ function selectAlbum(index, options = {}) {
   currentAlbumIndex = (index + albums.length) % albums.length;
   const album = albums[currentAlbumIndex];
   currentFilter = "all";
+  activeAlbumSection = "guide";
   currentReadingIndex = readingIndexByAlbum[album.id] ?? 0;
   document.querySelectorAll(".filter").forEach((item) => {
     item.classList.toggle("active", item.dataset.filter === "all");
@@ -1441,6 +1770,57 @@ function renderReadingDetail(album, activeIndex) {
       </div>
     </article>
   `;
+}
+
+function ensureAlbumReadingModal() {
+  let modal = document.querySelector("#albumReadingModal");
+  if (modal) return modal;
+  modal = document.createElement("div");
+  modal.id = "albumReadingModal";
+  modal.className = "album-reading-modal";
+  modal.setAttribute("aria-hidden", "true");
+  modal.innerHTML = `
+    <div class="album-reading-modal__backdrop" data-close-album-reading></div>
+    <section class="album-reading-modal__card" role="dialog" aria-modal="true" aria-labelledby="albumReadingTitle">
+      <button class="album-reading-modal__close" type="button" data-close-album-reading aria-label="关闭专辑解读">×</button>
+      <div class="album-reading-modal__body"></div>
+    </section>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-album-reading]")) closeAlbumReadingModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("open")) closeAlbumReadingModal();
+  });
+  return modal;
+}
+
+function openAlbumReadingModal(album, index) {
+  const modal = ensureAlbumReadingModal();
+  currentReadingIndex = index;
+  readingIndexByAlbum[album.id] = index;
+  modal.style.setProperty("--era", album.color);
+  modal.querySelector(".album-reading-modal__body").innerHTML = renderReadingDetail(album, index);
+  modal.querySelector(".reading-detail h3")?.setAttribute("id", "albumReadingTitle");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+  modal.querySelector(".album-reading-modal__close").focus();
+}
+
+function closeAlbumReadingModal() {
+  const modal = document.querySelector("#albumReadingModal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+function bindReadingPortal(scope, album) {
+  scope.querySelectorAll("[data-reading-card]").forEach((button) => {
+    button.addEventListener("click", () => openAlbumReadingModal(album, Number(button.dataset.readingCard)));
+  });
 }
 
 function bindReadingOpeners(scope, album) {
@@ -1912,7 +2292,8 @@ function renderCompleteTracklist(album) {
   return `
     <section class="complete-tracklist">
       <div class="tracklist-heading">
-        <h3>完整曲目</h3>
+        <h3>全部曲目</h3>
+        <p>每一首歌都可以打开独立窗口，在同一个入口里读歌词、看解读、去试听。</p>
       </div>
       <div class="tracklist-grid">
         ${rows
