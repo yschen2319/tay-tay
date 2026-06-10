@@ -82,7 +82,7 @@ const albums = [
       {
         title: "Love Story",
         analysis:
-          "它把 Romeo 与 Juliet 改写成胜利结局，重要的不只是浪漫，而是少女夺回结局权。她借经典爱情悲剧说：我知道世界会反对，但我可以重写叙事。",
+          "她把罗密欧与朱丽叶的结局改写了。悲剧不必永远是悲剧，只要我愿意重新讲述。阳台还是那个阳台，爱情还是被反对，但这次，他跪下了，我们逃走了，童话赢了。这是少女对命运的第一次改写权。",
         life:
           "这首歌强化了金色时代的童话外壳，也暴露了她早期对“被认可的爱情”的执念：不只要相爱，还要得到世界许可。"
       },
@@ -91,35 +91,35 @@ const albums = [
         analysis:
           "它是邻家女孩神话的巅峰：亲密来自理解，而不是耀眼。副歌的流行爆发力背后，是青春期很真实的比较心理和“我更懂你”的自我安慰。",
         life:
-          "这首歌让她跨出乡村核心受众。也正因它太成功，后来她必须不断证明自己不只是校园暗恋代言人。"
+          "这首歌让她跨出了乡村，走进全球青少年的心。但它也成了标签。后来她花了十年证明自己不只是这些，可那时，她还需要这首歌的光。"
       },
       {
         title: "Fifteen",
         analysis:
           "《Fifteen》像给过去的自己写信。它最动人的地方不是怀旧，而是成年人回望少女时，终于能分清“被喜欢”和“被珍惜”的差别。",
         life:
-          "它与她真实的高中年龄经验紧密相连。Taylor 早期常把具体朋友、年级和教室感写进歌里，使专辑有强烈的成长纪录片质感。"
+          "泰勒写给朋友 Abigail，也写给自己的高中时光。那些被匆忙告别的年纪，后来在歌里慢慢重逢。她用成年人的嗓音，唱出了少女时代学不会的那一课。"
       }
     ],
     deeps: [
       {
         title: "White Horse",
         analysis:
-          "如果《Love Story》是童话改写，《White Horse》就是童话退场。她不再等待王子，而是承认自己被一个虚构期待伤害了。",
+          "如果 Love Story 是改写的童话，White Horse 就是童话的退场。没有白马，没有王子，只有一个女孩站在现实里，终于承认自己被虚构的期待伤害了。她不等了。",
         life:
-          "这首歌让《Fearless》免于单纯甜美。金色时代真正的复杂性，来自她已经开始拆解自己曾经相信的东西。"
+          "金色时代真正的复杂性，藏在这首歌里。泰勒不只会写胜利的童话，也会写童话破碎的瞬间。这让 Fearless 免于天真，也让她的叙事开始有了重量。"
       },
       {
         title: "The Way I Loved You",
         analysis:
-          "它写出一种危险的诚实：稳定关系很好，却无法替代让人失控的激情。歌曲并不一定赞美混乱，而是承认年轻时会把强烈误读成命运。",
+          "稳定的男孩对我很好，准时、体贴、尊重。可我想念的是那个让我失控的人。雨夜、争吵、和好、心跳失序——那才是我以为的爱情。她不赞美混乱，但承认年轻时会把强烈误认为命中注定。",
         life:
-          "这首深藏曲解释了后来《Red》的入口：她的爱情书写从来不只追求好人好事，而是在辨认情绪强度与真正幸福的差别。"
+          "这是通往 Red 的入口。她开始写情绪强度和真正幸福的区别。不是所有激烈的感觉都值得被怀念，但那时她还在学习这件事。"
       },
       {
         title: "Breathe",
         analysis:
-          "它把分开写成友谊或关系里的安静坍塌，没有戏剧性坏人，只有两个人都尽力后仍然不能继续。",
+          "有些告别没有坏人。两个人都尽力了，可还是走不下去。呼吸变成最难的事，不是因为恨，而是因为失去了一个曾经懂你的人。这首歌写的是关系的安静坍塌。",
         life:
           "早期 Taylor 已经会写非黑即白之外的损失。这种“没有反派”的告别后来会在《happiness》《peace》中成熟。"
       }
@@ -2516,3 +2516,136 @@ window.addEventListener("hashchange", () => {
     showLanding({ preserveHistory: true });
   }
 });
+
+function getTodaySong() {
+  const allSongs = albums.flatMap(album => {
+    const list = completeTracklists[album.id] || { core: [], expanded: [] };
+    return [...list.core, ...list.expanded].map(title => ({ title, album }));
+  });
+  const daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  return allSongs[daysSinceEpoch % allSongs.length];
+}
+
+function getReadSongs() {
+  try {
+    return JSON.parse(localStorage.getItem('taylorSwiftReadSongs') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function markSongAsRead(title) {
+  const read = getReadSongs();
+  const normalized = title.toLowerCase().trim();
+  if (!read.includes(normalized)) {
+    read.push(normalized);
+    localStorage.setItem('taylorSwiftReadSongs', JSON.stringify(read));
+    updateProgressDisplay();
+  }
+}
+
+function getTotalSongCount() {
+  return albums.reduce((sum, album) => {
+    const list = completeTracklists[album.id] || { core: [], expanded: [] };
+    return sum + list.core.length + list.expanded.length;
+  }, 0);
+}
+
+function updateProgressDisplay() {
+  const btn = document.getElementById('progressBtn');
+  if (!btn) return;
+  const read = getReadSongs().length;
+  const total = getTotalSongCount();
+  btn.querySelector('.progress-count').textContent = `${read}/${total}`;
+}
+
+function showProgressModal() {
+  const read = getReadSongs();
+  const allSongs = albums.flatMap(album => {
+    const list = completeTracklists[album.id] || { core: [], expanded: [] };
+    return [...list.core, ...list.expanded].map(title => ({
+      title,
+      album,
+      isRead: read.includes(title.toLowerCase().trim())
+    }));
+  });
+
+  const modal = document.createElement('div');
+  modal.className = 'progress-modal';
+  modal.innerHTML = `
+    <div class="progress-modal__backdrop"></div>
+    <div class="progress-modal__card">
+      <button class="progress-modal__close" type="button" aria-label="关闭">×</button>
+      <h2>你的阅读进度</h2>
+      <p class="progress-stats">${read.length} / ${allSongs.length} 首歌已探索</p>
+      <div class="progress-list">
+        ${allSongs.map(song => `
+          <div class="progress-item ${song.isRead ? 'read' : ''}">
+            <span class="progress-check">${song.isRead ? '✓' : ''}</span>
+            <button class="progress-song" type="button" data-song-title="${escapeHtml(song.title)}">
+              <strong>${escapeHtml(song.title)}</strong>
+              <small>${song.album.title}</small>
+            </button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.classList.add('modal-open');
+
+  modal.querySelector('.progress-modal__backdrop').addEventListener('click', () => {
+    document.body.removeChild(modal);
+    document.body.classList.remove('modal-open');
+  });
+
+  modal.querySelector('.progress-modal__close').addEventListener('click', () => {
+    document.body.removeChild(modal);
+    document.body.classList.remove('modal-open');
+  });
+
+  modal.querySelectorAll('[data-song-title]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const title = btn.dataset.songTitle;
+      const song = allSongs.find(s => s.title === title);
+      if (song) {
+        const albumIndex = albums.findIndex(a => a.id === song.album.id);
+        if (albumIndex >= 0) {
+          currentAlbumIndex = albumIndex;
+          document.body.removeChild(modal);
+          document.body.classList.remove('modal-open');
+          openSongModal(title);
+        }
+      }
+    });
+  });
+}
+
+const originalOpenSongModal = openSongModal;
+openSongModal = function(title) {
+  markSongAsRead(title);
+  originalOpenSongModal(title);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateProgressDisplay();
+
+  const progressBtn = document.getElementById('progressBtn');
+  if (progressBtn) {
+    progressBtn.addEventListener('click', showProgressModal);
+  }
+
+  const todayBtn = document.getElementById('todaySongBtn');
+  if (todayBtn) {
+    const todaySong = getTodaySong();
+    todayBtn.addEventListener('click', () => {
+      const albumIndex = albums.findIndex(a => a.id === todaySong.album.id);
+      if (albumIndex >= 0) {
+        currentAlbumIndex = albumIndex;
+        openSongModal(todaySong.title);
+      }
+    });
+  }
+});
+
