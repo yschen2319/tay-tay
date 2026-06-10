@@ -960,8 +960,8 @@ const heroMapPositions = [
 
 Object.assign(landingCopy, {
   micro: "FOR THE SWIFTIES",
-  title: "TAYLOR'S 12 ALBUMS",
-  titleHtml: "TAYLOR'S <span>12 <em>albums</em></span>",
+  title: "The 12 Eras of Taylor Swift",
+  titleHtml: 'The <span class="era-title-accent">12 Eras</span> of Taylor Swift',
   lead: "A journey through every era. Twelve chapters of music, memories, and magic.",
   primary: "EXPLORE THE JOURNEY",
   secondary: "START FIRST ERA"
@@ -970,18 +970,18 @@ Object.assign(landingCopy, {
 heroMapPositions.splice(
   0,
   heroMapPositions.length,
-  { x: 28, y: 78, mx: 28, my: 70 },
-  { x: 45, y: 64, mx: 58, my: 55 },
-  { x: 53, y: 44, mx: 29, my: 43 },
-  { x: 64, y: 34, mx: 62, my: 35 },
-  { x: 80, y: 17, mx: 70, my: 28 },
-  { x: 78, y: 30, mx: 73, my: 39 },
-  { x: 75, y: 45, mx: 72, my: 47 },
-  { x: 89, y: 36, mx: 82, my: 53 },
-  { x: 88, y: 56, mx: 75, my: 65 },
-  { x: 70, y: 72, mx: 67, my: 75 },
-  { x: 55, y: 88, mx: 48, my: 84 },
-  { x: 88, y: 88, mx: 75, my: 91 }
+  { x: 28, y: 78, mx: 22, my: 84 },
+  { x: 45, y: 64, mx: 58, my: 78 },
+  { x: 53, y: 44, mx: 22, my: 50 },
+  { x: 64, y: 34, mx: 63, my: 36 },
+  { x: 80, y: 17, mx: 72, my: 20 },
+  { x: 78, y: 30, mx: 74, my: 43 },
+  { x: 75, y: 45, mx: 70, my: 61 },
+  { x: 89, y: 36, mx: 83, my: 72 },
+  { x: 88, y: 56, mx: 74, my: 90 },
+  { x: 70, y: 72, mx: 58, my: 86 },
+  { x: 55, y: 88, mx: 86, my: 34 },
+  { x: 88, y: 88, mx: 82, my: 95 }
 );
 
 const albumCovers = {
