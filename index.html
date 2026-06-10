@@ -22,6 +22,9 @@
       </a>
       <nav id="albumRail" class="album-rail"></nav>
       <div class="rail-tools">
+        <button id="progressBtn" type="button" class="progress-btn" aria-label="查看阅读进度">
+          <span class="progress-count">0/154</span>
+        </button>
         <a href="#songIndex">曲目索引</a>
         <a href="#sources">资料来源</a>
       </div>
@@ -39,7 +42,8 @@
             深藏曲负责留下真正的心跳。
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#album-taylor-swift">开始第一章</a>
+            <button class="button primary" id="todaySongBtn" type="button">今天读这首</button>
+            <a class="button secondary" href="#album-taylor-swift">开始第一章</a>
             <a class="button secondary" href="#heroMap">选择专辑</a>
           </div>
         </div>
