@@ -971,17 +971,17 @@ heroMapPositions.splice(
   0,
   heroMapPositions.length,
   { x: 28, y: 78, mx: 22, my: 84 },
-  { x: 45, y: 64, mx: 58, my: 78 },
-  { x: 53, y: 44, mx: 22, my: 50 },
+  { x: 45, y: 64, mx: 54, my: 76 },
+  { x: 53, y: 44, mx: 22, my: 49 },
   { x: 64, y: 34, mx: 63, my: 36 },
   { x: 80, y: 17, mx: 72, my: 20 },
   { x: 78, y: 30, mx: 74, my: 43 },
-  { x: 75, y: 45, mx: 70, my: 61 },
+  { x: 75, y: 45, mx: 70, my: 60 },
   { x: 89, y: 36, mx: 83, my: 72 },
-  { x: 88, y: 56, mx: 74, my: 90 },
-  { x: 70, y: 72, mx: 58, my: 86 },
-  { x: 55, y: 88, mx: 86, my: 34 },
-  { x: 88, y: 88, mx: 82, my: 95 }
+  { x: 88, y: 56, mx: 74, my: 86 },
+  { x: 70, y: 72, mx: 80, my: 62 },
+  { x: 55, y: 88, mx: 62, my: 93 },
+  { x: 88, y: 88, mx: 82, my: 97 }
 );
 
 const albumCovers = {

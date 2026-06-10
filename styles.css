@@ -6212,6 +6212,10 @@ body.landing-mode .hero-art {
   background: url("./assets/era-path-hero.png") center / cover no-repeat !important;
 }
 
+body.landing-mode .hero-map::before {
+  display: none !important;
+}
+
 body.landing-mode .hero-content {
   --landing-copy-width: min(720px, calc(100vw - 96px));
   width: var(--landing-copy-width) !important;
@@ -6253,6 +6257,8 @@ body.landing-mode h1 .era-title-accent {
   color: #80611f !important;
   font: inherit !important;
   font-style: italic !important;
+  font-variant-numeric: lining-nums !important;
+  font-feature-settings: "lnum" 1 !important;
 }
 
 body.landing-mode .lead {
@@ -6269,6 +6275,10 @@ body.landing-mode .lead {
 @media (max-width: 720px) {
   body.landing-mode .hero {
     min-height: max(100svh, 1500px) !important;
+  }
+
+  body.landing-mode .hero::after {
+    display: none !important;
   }
 
   body.landing-mode .hero-art {
