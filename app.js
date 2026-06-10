@@ -813,7 +813,7 @@ function renderRail() {
     mapLink.className = "map-item";
     mapLink.href = `#album-${album.id}`;
     mapLink.style.setProperty("--era", album.color);
-    mapLink.innerHTML = `<span></span><strong>${album.title}</strong><small>${album.year}</small>`;
+    mapLink.innerHTML = `<strong>${album.title}</strong>`;
     map.appendChild(mapLink);
   });
 }
@@ -957,6 +957,32 @@ const heroMapPositions = [
   { x: 78, y: 40, mx: 78, my: 40 },
   { x: 66, y: 56, mx: 66, my: 56 }
 ];
+
+Object.assign(landingCopy, {
+  micro: "FOR THE SWIFTIES",
+  title: "TAYLOR'S 12 ALBUMS",
+  titleHtml: "TAYLOR'S <span>12 <em>albums</em></span>",
+  lead: "A journey through every era. Twelve chapters of music, memories, and magic.",
+  primary: "EXPLORE THE JOURNEY",
+  secondary: "START FIRST ERA"
+});
+
+heroMapPositions.splice(
+  0,
+  heroMapPositions.length,
+  { x: 28, y: 78, mx: 28, my: 70 },
+  { x: 45, y: 64, mx: 58, my: 55 },
+  { x: 53, y: 44, mx: 29, my: 43 },
+  { x: 64, y: 34, mx: 62, my: 35 },
+  { x: 80, y: 17, mx: 70, my: 28 },
+  { x: 78, y: 30, mx: 73, my: 39 },
+  { x: 75, y: 45, mx: 72, my: 47 },
+  { x: 89, y: 36, mx: 82, my: 53 },
+  { x: 88, y: 56, mx: 75, my: 65 },
+  { x: 70, y: 72, mx: 67, my: 75 },
+  { x: 55, y: 88, mx: 48, my: 84 },
+  { x: 88, y: 88, mx: 75, my: 91 }
+);
 
 const albumCovers = {
   "taylor-swift": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/be/e1/48/bee148d6-d16c-d8f7-0173-d6cf6d684aa1/08PNDIM00678.rgb.jpg/600x600bb.jpg",
@@ -1131,14 +1157,14 @@ renderRail = function () {
       mapLink.className = "map-item";
       mapLink.href = `#album-${album.id}`;
       mapLink.dataset.album = album.id;
-      mapLink.dataset.label = `${album.title} / ${album.year}`;
+      mapLink.dataset.label = album.title;
       mapLink.style.setProperty("--era", album.color);
       mapLink.style.setProperty("--map-x", `${position.x}%`);
       mapLink.style.setProperty("--map-y", `${position.y}%`);
       mapLink.style.setProperty("--map-mobile-x", `${position.mx}%`);
       mapLink.style.setProperty("--map-mobile-y", `${position.my}%`);
-      mapLink.setAttribute("aria-label", `${album.title} ${album.year}`);
-      mapLink.innerHTML = `<span></span><strong>${album.title}</strong><small>${album.year}</small>`;
+      mapLink.setAttribute("aria-label", album.title);
+      mapLink.innerHTML = `<strong>${album.title}</strong>`;
       mapLink.addEventListener("click", (event) => {
         event.preventDefault();
         selectAlbum(index);
@@ -1178,7 +1204,7 @@ function applyLandingCopy() {
   const secondary = document.querySelector(".hero-actions .button.secondary");
 
   if (micro) micro.textContent = landingCopy.micro;
-  if (title) title.textContent = landingCopy.title;
+  if (title) title.innerHTML = landingCopy.titleHtml || landingCopy.title;
   if (lead) lead.textContent = landingCopy.lead;
   if (primary) primary.textContent = landingCopy.primary;
   if (secondary) secondary.textContent = landingCopy.secondary;
@@ -2640,6 +2666,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (todayBtn) {
     const todaySong = getTodaySong();
     todayBtn.addEventListener('click', () => {
+      if (document.body.classList.contains("landing-mode")) {
+        selectAlbum(0);
+        return;
+      }
       const albumIndex = albums.findIndex(a => a.id === todaySong.album.id);
       if (albumIndex >= 0) {
         currentAlbumIndex = albumIndex;
@@ -2648,4 +2678,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-

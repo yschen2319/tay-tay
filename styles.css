@@ -3519,12 +3519,12 @@ body.album-hub-mode {
 }
 
 .album-guide blockquote::before {
-  content: "“";
+  content: "\201C";
   margin-right: 12px;
 }
 
 .album-guide blockquote::after {
-  content: "”";
+  content: "\201D";
   margin-left: 12px;
 }
 
@@ -5656,5 +5656,542 @@ body.landing-mode .map-item:focus-visible::after {
 
   body.landing-mode .map-item::after {
     display: none;
+  }
+}
+
+/* Reference-inspired landing poster. Final override. */
+body.landing-mode {
+  background: #f4ead8 !important;
+}
+
+body.landing-mode main {
+  margin-left: 0 !important;
+}
+
+body.landing-mode .hero {
+  min-height: max(100svh, 860px) !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  background: #f4ead8 !important;
+}
+
+body.landing-mode .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 11% 84%, rgba(121, 137, 76, 0.18), transparent 22rem),
+    radial-gradient(circle at 90% 12%, rgba(218, 111, 93, 0.18), transparent 23rem),
+    linear-gradient(90deg, rgba(246, 236, 219, 0.96) 0%, rgba(246, 236, 219, 0.82) 31%, rgba(246, 236, 219, 0.2) 57%, rgba(246, 236, 219, 0) 78%);
+}
+
+body.landing-mode .hero::after {
+  content: "ONE ARTIST. TWELVE ERAS. ENDLESS IMPACT";
+  position: absolute;
+  left: 50%;
+  bottom: clamp(24px, 4vh, 44px);
+  z-index: 4;
+  color: rgba(255, 250, 239, 0.9);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-align: center;
+  text-shadow: 0 2px 14px rgba(38, 28, 18, 0.45);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+body.landing-mode .hero-art {
+  inset: 0 !important;
+  filter: saturate(1.08) contrast(1.02) !important;
+  background:
+    linear-gradient(90deg, rgba(247, 238, 223, 0.95) 0%, rgba(247, 238, 223, 0.64) 36%, rgba(247, 238, 223, 0.06) 66%),
+    url("./assets/era-path-hero.png") center / cover no-repeat !important;
+}
+
+body.landing-mode .hero-content {
+  position: relative !important;
+  z-index: 5 !important;
+  width: min(560px, calc(100% - 72px)) !important;
+  padding: clamp(70px, 11vh, 112px) 0 0 clamp(44px, 8vw, 116px) !important;
+}
+
+body.landing-mode .micro {
+  position: relative;
+  margin: 0 0 clamp(78px, 12vh, 122px) !important;
+  color: #28231c !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.48em !important;
+  text-align: center;
+}
+
+body.landing-mode .micro::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 20px);
+  width: 148px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(178, 128, 55, 0.58), transparent);
+  transform: translateX(-50%);
+}
+
+body.landing-mode h1 {
+  max-width: 9.5ch !important;
+  color: #30271e !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(78px, 8.6vw, 128px) !important;
+  font-weight: 400 !important;
+  line-height: 0.9 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
+}
+
+body.landing-mode h1 span {
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  color: #b68640;
+}
+
+body.landing-mode h1 em {
+  color: #432b68;
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+  font-size: 0.74em;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: lowercase;
+}
+
+body.landing-mode .lead {
+  max-width: 28ch !important;
+  margin-top: clamp(28px, 4vh, 42px) !important;
+  color: #433a30 !important;
+  font-size: 19px !important;
+  line-height: 1.65 !important;
+}
+
+body.landing-mode .hero-actions {
+  margin-top: 34px !important;
+}
+
+body.landing-mode .hero-actions .button {
+  min-height: 58px !important;
+  border: 1px solid rgba(255, 255, 255, 0.58) !important;
+  border-radius: 999px !important;
+  box-shadow: 0 18px 36px rgba(70, 39, 85, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  font-size: 13px !important;
+  letter-spacing: 0.28em;
+}
+
+body.landing-mode .hero-actions .button.primary {
+  padding-inline: 34px !important;
+  background: linear-gradient(135deg, #5a467d, #9b6b94 58%, #d0a261) !important;
+  color: #fff8ef !important;
+}
+
+body.landing-mode .hero-actions .button.secondary {
+  background: rgba(255, 250, 240, 0.58) !important;
+  color: #392f27 !important;
+}
+
+body.landing-mode .hero-actions .button.secondary + .button.secondary {
+  display: none !important;
+}
+
+body.landing-mode .hero-map {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 4 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+body.landing-mode .hero-map::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(48vw, 650px);
+  height: min(82vh, 720px);
+  border: 1px solid rgba(239, 211, 161, 0.28);
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 48% 52% 46% 54%;
+  transform: translate(-4%, -46%) rotate(-12deg);
+  pointer-events: none;
+}
+
+body.landing-mode .map-item {
+  position: absolute !important;
+  left: var(--map-x) !important;
+  top: var(--map-y) !important;
+  display: flex !important;
+  width: clamp(132px, 10vw, 170px) !important;
+  min-width: 0 !important;
+  min-height: clamp(72px, 7vw, 102px) !important;
+  aspect-ratio: auto !important;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.08) 46%, transparent 68%),
+    linear-gradient(135deg, color-mix(in srgb, var(--era) 12%, rgba(255, 255, 255, 0.18)), rgba(255, 255, 255, 0.08) 48%, rgba(255, 255, 255, 0.16)) !important;
+  box-shadow:
+    0 22px 46px rgba(36, 26, 18, 0.14),
+    0 0 28px color-mix(in srgb, var(--era) 24%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -18px 38px rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(18px) saturate(1.22);
+  -webkit-backdrop-filter: blur(18px) saturate(1.22);
+  pointer-events: auto;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+body.landing-mode .map-item::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.42), transparent 36%, rgba(255, 255, 255, 0.16));
+  opacity: 0.66;
+  pointer-events: none;
+}
+
+body.landing-mode .map-item strong {
+  position: relative !important;
+  z-index: 1;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  clip: auto !important;
+  color: #fff8ef;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 1.95vw, 29px) !important;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.06;
+  overflow: hidden !important;
+  overflow-wrap: normal;
+  white-space: normal !important;
+  word-break: normal;
+  text-align: left;
+  text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(22, 16, 12, 0.5), 0 0 18px color-mix(in srgb, var(--era) 28%, transparent);
+}
+
+body.landing-mode .map-item small,
+body.landing-mode .map-item span,
+body.landing-mode .map-item::after {
+  display: none !important;
+}
+
+body.landing-mode .map-item:hover,
+body.landing-mode .map-item:focus-visible {
+  outline: none;
+  filter: brightness(1.05);
+  transform: translate(-50%, -50%) scale(1.045);
+  box-shadow:
+    0 28px 58px rgba(36, 26, 18, 0.2),
+    0 0 0 4px rgba(255, 250, 239, 0.18),
+    0 0 34px color-mix(in srgb, var(--era) 34%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+body.landing-mode .map-item[data-album="taylor-swift"] strong,
+body.landing-mode .map-item[data-album="folklore"] strong,
+body.landing-mode .map-item[data-album="ttpd"] strong,
+body.landing-mode .map-item[data-album="showgirl"] strong {
+  font-size: clamp(14px, 1.45vw, 21px) !important;
+}
+
+body.landing-mode .map-item[data-album="reputation"],
+body.landing-mode .map-item[data-album="folklore"],
+body.landing-mode .map-item[data-album="evermore"],
+body.landing-mode .map-item[data-album="midnights"],
+body.landing-mode .map-item[data-album="ttpd"],
+body.landing-mode .map-item[data-album="showgirl"] {
+  width: clamp(148px, 11.5vw, 190px) !important;
+}
+
+body.landing-mode .map-item[data-album="reputation"] strong {
+  font-size: clamp(15px, 1.55vw, 22px) !important;
+  text-transform: lowercase;
+}
+
+@media (max-width: 1080px) {
+  body.landing-mode .hero {
+    min-height: max(100svh, 920px) !important;
+  }
+
+  body.landing-mode .hero::before {
+    background:
+      linear-gradient(180deg, rgba(247, 238, 223, 0.92) 0%, rgba(247, 238, 223, 0.62) 24%, rgba(247, 238, 223, 0.08) 56%),
+      linear-gradient(90deg, rgba(247, 238, 223, 0.9) 0%, rgba(247, 238, 223, 0.18) 82%);
+  }
+
+  body.landing-mode .hero-content {
+    width: min(520px, calc(100% - 48px)) !important;
+    padding: calc(44px + env(safe-area-inset-top)) 24px 0 !important;
+  }
+
+  body.landing-mode .micro {
+    margin-bottom: 34px !important;
+    text-align: left;
+  }
+
+  body.landing-mode .micro::after {
+    left: 0;
+    transform: none;
+  }
+
+  body.landing-mode h1 {
+    max-width: 8.8ch !important;
+    font-size: clamp(52px, 11vw, 86px) !important;
+  }
+
+  body.landing-mode .lead {
+    font-size: 17px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  body.landing-mode {
+    overflow-x: hidden;
+  }
+
+  body.landing-mode .hero {
+    min-height: max(100svh, 1500px) !important;
+    overflow: hidden !important;
+  }
+
+  body.landing-mode .hero::before {
+    background:
+      linear-gradient(180deg, rgba(247, 238, 223, 0.96) 0%, rgba(247, 238, 223, 0.74) 24%, rgba(247, 238, 223, 0.14) 54%, rgba(247, 238, 223, 0.02) 100%),
+      radial-gradient(circle at 86% 12%, rgba(220, 118, 100, 0.22), transparent 14rem);
+  }
+
+  body.landing-mode .hero::after {
+    bottom: 28px;
+    width: min(86vw, 360px);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    white-space: normal;
+  }
+
+  body.landing-mode .hero-art {
+    background:
+      linear-gradient(180deg, rgba(247, 238, 223, 0.95) 0%, rgba(247, 238, 223, 0.52) 31%, rgba(247, 238, 223, 0.02) 74%),
+      url("./assets/era-path-hero.png") 66% center / auto 100% no-repeat !important;
+  }
+
+  body.landing-mode .hero-content {
+    width: min(340px, calc(100% - 32px)) !important;
+    padding: calc(32px + env(safe-area-inset-top)) 16px 0 !important;
+  }
+
+  body.landing-mode .micro {
+    margin-bottom: 28px !important;
+    font-size: 10px !important;
+    letter-spacing: 0.32em !important;
+  }
+
+  body.landing-mode h1 {
+    max-width: 7.6ch !important;
+    font-size: clamp(44px, 14.4vw, 64px) !important;
+    line-height: 0.94 !important;
+  }
+
+  body.landing-mode h1 span {
+    display: block;
+  }
+
+  body.landing-mode h1 em {
+    font-size: 0.82em;
+  }
+
+  body.landing-mode .lead {
+    max-width: 24ch !important;
+    margin-top: 18px !important;
+    font-size: 14px !important;
+    line-height: 1.52 !important;
+  }
+
+  body.landing-mode .hero-actions {
+    gap: 9px !important;
+    margin-top: 18px !important;
+  }
+
+  body.landing-mode .hero-actions .button {
+    min-height: 42px !important;
+    padding: 0 16px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.18em;
+  }
+
+  body.landing-mode .hero-actions .button.secondary {
+    display: none !important;
+  }
+
+  body.landing-mode .map-item {
+    left: var(--map-mobile-x) !important;
+    top: var(--map-mobile-y) !important;
+    width: clamp(104px, 32vw, 124px) !important;
+    min-height: 66px !important;
+    aspect-ratio: auto !important;
+    padding: 13px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  body.landing-mode .map-item strong {
+    position: static !important;
+    height: auto !important;
+    margin: 0 !important;
+    clip: auto !important;
+    overflow: hidden !important;
+    overflow-wrap: normal;
+    white-space: normal !important;
+    word-break: normal;
+    font-size: clamp(17px, 5vw, 22px) !important;
+  }
+
+  body.landing-mode .map-item[data-album="taylor-swift"] strong,
+  body.landing-mode .map-item[data-album="folklore"] strong,
+  body.landing-mode .map-item[data-album="ttpd"] strong,
+  body.landing-mode .map-item[data-album="showgirl"] strong,
+  body.landing-mode .map-item[data-album="reputation"] strong {
+    font-size: clamp(13px, 4vw, 16px) !important;
+  }
+
+  body.landing-mode .map-item[data-album="ttpd"],
+  body.landing-mode .map-item[data-album="showgirl"] {
+    width: clamp(124px, 39vw, 152px) !important;
+  }
+}
+
+/* Album names only: no cards, placed directly over matching background scenes. */
+body.landing-mode .map-item {
+  width: max-content !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  aspect-ratio: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+body.landing-mode .map-item::before,
+body.landing-mode .map-item::after {
+  display: none !important;
+}
+
+body.landing-mode .map-item strong {
+  position: static !important;
+  display: block !important;
+  width: max-content !important;
+  max-width: clamp(96px, 11vw, 170px) !important;
+  height: auto !important;
+  margin: 0 !important;
+  clip: auto !important;
+  overflow: visible !important;
+  color: rgba(255, 251, 242, 0.96);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 2.05vw, 33px) !important;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.02;
+  text-align: left;
+  text-wrap: balance;
+  white-space: normal !important;
+  word-break: normal;
+  overflow-wrap: normal;
+  text-shadow:
+    0 2px 4px rgba(28, 18, 10, 0.58),
+    0 8px 24px rgba(28, 18, 10, 0.42),
+    0 0 18px color-mix(in srgb, var(--era) 44%, transparent);
+}
+
+body.landing-mode .map-item:hover,
+body.landing-mode .map-item:focus-visible {
+  outline: none;
+  filter: none !important;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+body.landing-mode .map-item:focus-visible strong {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+body.landing-mode .map-item[data-album="taylor-swift"] strong,
+body.landing-mode .map-item[data-album="ttpd"] strong,
+body.landing-mode .map-item[data-album="showgirl"] strong {
+  max-width: clamp(104px, 13vw, 190px) !important;
+  font-size: clamp(16px, 1.52vw, 24px) !important;
+}
+
+body.landing-mode .map-item[data-album="reputation"] strong {
+  max-width: clamp(110px, 12vw, 170px) !important;
+  font-size: clamp(17px, 1.6vw, 25px) !important;
+  text-transform: lowercase;
+}
+
+body.landing-mode .map-item[data-album="folklore"] strong,
+body.landing-mode .map-item[data-album="evermore"] strong,
+body.landing-mode .map-item[data-album="midnights"] strong {
+  max-width: clamp(104px, 11vw, 160px) !important;
+}
+
+@media (max-width: 720px) {
+  body.landing-mode .map-item {
+    width: max-content !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.landing-mode .map-item strong {
+    max-width: clamp(82px, 30vw, 136px) !important;
+    color: rgba(255, 251, 242, 0.96);
+    font-size: clamp(18px, 6vw, 25px) !important;
+    overflow: visible !important;
+    text-shadow:
+      0 2px 4px rgba(28, 18, 10, 0.62),
+      0 8px 22px rgba(28, 18, 10, 0.44),
+      0 0 18px color-mix(in srgb, var(--era) 42%, transparent);
+  }
+
+  body.landing-mode .map-item[data-album="taylor-swift"] strong,
+  body.landing-mode .map-item[data-album="ttpd"] strong,
+  body.landing-mode .map-item[data-album="showgirl"] strong,
+  body.landing-mode .map-item[data-album="reputation"] strong {
+    max-width: clamp(96px, 36vw, 150px) !important;
+    font-size: clamp(14px, 4.5vw, 18px) !important;
   }
 }
