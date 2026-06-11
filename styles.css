@@ -6282,7 +6282,7 @@ body.landing-mode .lead {
 
 @media (max-width: 720px) {
   body.landing-mode .hero {
-    min-height: max(100svh, 1500px) !important;
+    min-height: 100svh !important;
   }
 
   body.landing-mode .hero::after {
@@ -6290,7 +6290,9 @@ body.landing-mode .lead {
   }
 
   body.landing-mode .hero-art {
-    background: url("./assets/era-path-hero.png") 76% 60% / auto clamp(1060px, 142svh, 1220px) no-repeat !important;
+    background:
+      linear-gradient(180deg, #f4ead8 0%, rgba(244, 234, 216, 0.98) 29%, rgba(244, 234, 216, 0.34) 40%, rgba(244, 234, 216, 0.02) 62%),
+      url("./assets/era-path-hero.png") right clamp(300px, 36.8svh, 326px) / min(640px, 164vw) auto no-repeat !important;
   }
 
   body.landing-mode .hero-content {
@@ -6323,7 +6325,7 @@ body.landing-mode .lead {
 
   body.landing-mode .map-item strong {
     max-width: clamp(78px, 27vw, 128px) !important;
-    font-size: clamp(16px, 5.2vw, 22px) !important;
+    font-size: clamp(14px, 4.6vw, 19px) !important;
     line-height: 1.03 !important;
   }
 
@@ -6332,6 +6334,6 @@ body.landing-mode .lead {
   body.landing-mode .map-item[data-album="showgirl"] strong,
   body.landing-mode .map-item[data-album="reputation"] strong {
     max-width: clamp(88px, 32vw, 144px) !important;
-    font-size: clamp(13px, 4.1vw, 17px) !important;
+    font-size: clamp(11px, 3.5vw, 15px) !important;
   }
 }
