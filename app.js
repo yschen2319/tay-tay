@@ -970,18 +970,18 @@ Object.assign(landingCopy, {
 heroMapPositions.splice(
   0,
   heroMapPositions.length,
-  { x: 28, y: 78, mx: 11, my: 73 },
-  { x: 45, y: 64, mx: 25, my: 62 },
-  { x: 53, y: 44, mx: 16, my: 43 },
-  { x: 64, y: 34, mx: 42, my: 35 },
-  { x: 80, y: 17, mx: 52, my: 18 },
-  { x: 78, y: 30, mx: 82, my: 30 },
-  { x: 75, y: 45, mx: 75, my: 45 },
-  { x: 89, y: 36, mx: 88, my: 55 },
-  { x: 88, y: 56, mx: 88, my: 68 },
-  { x: 70, y: 72, mx: 62, my: 76 },
-  { x: 55, y: 88, mx: 42, my: 86 },
-  { x: 88, y: 88, mx: 83, my: 89 }
+  { x: 28, y: 78, mx: 15, my: 70 },
+  { x: 45, y: 64, mx: 16, my: 65 },
+  { x: 53, y: 44, mx: 28, my: 57 },
+  { x: 64, y: 34, mx: 44, my: 53 },
+  { x: 80, y: 17, mx: 69, my: 46 },
+  { x: 78, y: 30, mx: 66, my: 51 },
+  { x: 75, y: 45, mx: 61, my: 57 },
+  { x: 89, y: 36, mx: 83, my: 54 },
+  { x: 88, y: 56, mx: 82, my: 62 },
+  { x: 70, y: 72, mx: 54, my: 68 },
+  { x: 55, y: 88, mx: 30, my: 75 },
+  { x: 88, y: 88, mx: 82, my: 75 }
 );
 
 const albumCovers = {
