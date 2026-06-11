@@ -5778,6 +5778,7 @@ body.landing-mode .lead {
 
 body.landing-mode .hero-actions {
   margin-top: 34px !important;
+  pointer-events: none;
 }
 
 body.landing-mode .hero-actions .button {
@@ -5793,11 +5794,11 @@ body.landing-mode .hero-actions .button.primary {
   padding-inline: 34px !important;
   background: linear-gradient(135deg, #5a467d, #9b6b94 58%, #d0a261) !important;
   color: #fff8ef !important;
+  pointer-events: auto;
 }
 
 body.landing-mode .hero-actions .button.secondary {
-  background: rgba(255, 250, 240, 0.58) !important;
-  color: #392f27 !important;
+  display: none !important;
 }
 
 body.landing-mode .hero-actions .button.secondary + .button.secondary {
@@ -5807,7 +5808,7 @@ body.landing-mode .hero-actions .button.secondary + .button.secondary {
 body.landing-mode .hero-map {
   position: absolute !important;
   inset: 0 !important;
-  z-index: 4 !important;
+  z-index: 6 !important;
   display: block !important;
   width: 100% !important;
   height: 100% !important;
@@ -6101,6 +6102,7 @@ body.landing-mode .map-item {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   filter: none !important;
+  z-index: 8;
 }
 
 body.landing-mode .map-item::before,
@@ -6167,6 +6169,10 @@ body.landing-mode .map-item[data-album="midnights"] strong {
 }
 
 @media (max-width: 720px) {
+  body.landing-mode .hero-actions {
+    display: none !important;
+  }
+
   body.landing-mode .map-item {
     width: max-content !important;
     min-height: 0 !important;
@@ -6219,6 +6225,7 @@ body.landing-mode .hero-map::before {
 body.landing-mode .hero-content {
   --landing-copy-width: min(720px, calc(100vw - 96px));
   width: var(--landing-copy-width) !important;
+  pointer-events: none;
 }
 
 body.landing-mode .micro {

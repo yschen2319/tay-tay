@@ -964,7 +964,7 @@ Object.assign(landingCopy, {
   titleHtml: 'The <span class="era-title-accent">12 Eras</span> of Taylor Swift',
   lead: "A journey through every era. Twelve chapters of music, memories, and magic.",
   primary: "EXPLORE THE JOURNEY",
-  secondary: "START FIRST ERA"
+  secondary: ""
 });
 
 heroMapPositions.splice(
@@ -1201,13 +1201,20 @@ function applyLandingCopy() {
   const title = document.querySelector("#hero-title");
   const lead = document.querySelector(".hero .lead");
   const primary = document.querySelector(".hero-actions .button.primary");
-  const secondary = document.querySelector(".hero-actions .button.secondary");
+  const secondaryButtons = document.querySelectorAll(".hero-actions .button.secondary");
 
   if (micro) micro.textContent = landingCopy.micro;
   if (title) title.innerHTML = landingCopy.titleHtml || landingCopy.title;
   if (lead) lead.textContent = landingCopy.lead;
   if (primary) primary.textContent = landingCopy.primary;
-  if (secondary) secondary.textContent = landingCopy.secondary;
+  secondaryButtons.forEach((secondary) => {
+    if (landingCopy.secondary) {
+      secondary.textContent = landingCopy.secondary;
+      secondary.hidden = false;
+    } else {
+      secondary.hidden = true;
+    }
+  });
 }
 
 function appHistoryState(view = "landing", albumIndex = currentAlbumIndex, section = activeAlbumSection) {
