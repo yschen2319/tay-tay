@@ -1,0 +1,573 @@
+/* ============================================================
+   companion.css — 陪伴模块样式
+   复用 styles.css 的设计变量：--ink / --paper / --line / --muted
+   每张卡片用 --era（时代色）做点缀，保持"纪念品"而非"任务面板"的气质。
+   ============================================================ */
+
+/* ---------- 通用弹窗 ---------- */
+
+.tt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.tt-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 24, 20, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.tt-overlay__card {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: 88vh;
+  overflow: hidden auto;
+  background: var(--paper, #f5efe4);
+  border: 1px solid var(--line, rgba(18, 53, 43, 0.18));
+  border-radius: 22px;
+  box-shadow: var(--shadow, 0 18px 60px rgba(25, 18, 10, 0.18));
+  padding: 1.6rem 1.5rem 1.4rem;
+  animation: tt-pop 0.28s ease;
+}
+
+@keyframes tt-pop {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.tt-overlay__close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.8rem;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.tt-eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted, #71695e);
+}
+
+.tt-overlay h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+}
+
+.tt-overlay h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+}
+
+.tt-btn {
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.tt-btn:hover { transform: translateY(-1px); }
+
+.tt-btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tt-empty {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+/* ---------- 每日仪式 ---------- */
+
+.tt-ritual__mood,
+.tt-ritual__song,
+.tt-ritual__question,
+.tt-ritual__theme {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.8rem;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.tt-ritual__mood { border-left: 5px solid var(--era, var(--ink)); }
+.tt-ritual__song { border-left: 5px solid var(--era, var(--ink)); }
+
+.tt-ritual__mood span,
+.tt-ritual__song span,
+.tt-ritual__question span,
+.tt-ritual__theme span {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+
+.tt-ritual__mood strong {
+  font-size: 1.3rem;
+  color: var(--era, var(--ink));
+}
+
+.tt-ritual__mood p,
+.tt-ritual__question p {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.tt-ritual__song h3 { margin: 0; font-size: 1.25rem; }
+
+.tt-ritual__song > p {
+  margin: 0.2rem 0 0.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.tt-ritual__song blockquote {
+  margin: 0 0 0.7rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--era, var(--line));
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.tt-ritual__question small {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.tt-ritual__picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
+.tt-ritual__picks button {
+  text-align: left;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--era, var(--ink));
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.tt-ritual__picks button:hover { transform: translateY(-2px); }
+.tt-ritual__picks strong { display: block; font-size: 0.88rem; color: var(--ink); }
+.tt-ritual__picks small { color: var(--muted); font-size: 0.74rem; }
+
+.tt-ritual__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+.tt-ritual__footer strong { color: var(--ink); }
+
+/* ---------- 歌曲弹窗内：收藏 + 便签 ---------- */
+
+.tt-fav {
+  position: absolute;
+  top: 18px;
+  right: 72px;
+  z-index: 24;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+  color: #c14a64;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tt-fav.on {
+  color: #fff;
+  background: var(--era, #c14a64);
+}
+
+.tt-memory {
+  margin-top: 1.4rem;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 0.9rem 1rem 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tt-memory__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.tt-memory textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 4.4rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.7rem;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.tt-memory__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.tt-memory__state { color: var(--muted); font-size: 0.74rem; }
+
+/* ---------- 专辑护照 ---------- */
+
+.tt-passport__sub {
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.tt-journey {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.9rem;
+  background: linear-gradient(120deg, rgba(210, 160, 56, 0.18), rgba(108, 60, 141, 0.14));
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.tt-passport__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.7rem;
+}
+
+.tt-era {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.7rem 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tt-era header {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+}
+
+.tt-era__badge {
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.tt-era.lit .tt-era__badge {
+  background: var(--era);
+  border-color: var(--era);
+  color: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--era) 22%, transparent);
+}
+
+.tt-era header strong { display: block; font-size: 0.92rem; }
+.tt-era header small { color: var(--muted); font-size: 0.74rem; }
+.tt-era__chev { margin-left: auto; color: var(--muted); font-style: normal; transition: transform 0.2s ease; }
+.tt-era.open .tt-era__chev { transform: rotate(180deg); }
+
+.tt-era__bar {
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(18, 53, 43, 0.1);
+  margin-top: 0.55rem;
+  overflow: hidden;
+}
+
+.tt-era__bar span {
+  display: block;
+  height: 100%;
+  background: var(--era);
+  border-radius: inherit;
+  transition: width 0.4s ease;
+}
+
+.tt-era__bless {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.tt-era__tracks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+.tt-era__tracks[hidden] { display: none; }
+
+.tt-era__tracks button {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.22rem 0.6rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.tt-era__tracks button.read {
+  background: var(--era);
+  border-color: var(--era);
+  color: #fff;
+}
+
+/* ---------- 我的轨迹 ---------- */
+
+.tt-trail__wander { margin: 0 0 0.8rem; font-size: 0.95rem; line-height: 1.6; }
+
+.tt-trail__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.tt-trail__stats div {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.55rem 0.4rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.tt-trail__stats strong { display: block; font-size: 1.2rem; }
+.tt-trail__stats small { color: var(--muted); font-size: 0.72rem; }
+
+.tt-trail__block {
+  border-top: 1px solid var(--line);
+  padding-top: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.tt-trail__eras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tt-trail__eras span {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--era);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.tt-theme-row {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr 2rem;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.84rem;
+}
+
+.tt-theme-bar {
+  height: 7px;
+  border-radius: 99px;
+  background: rgba(18, 53, 43, 0.1);
+  overflow: hidden;
+}
+
+.tt-theme-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6c3c8d, #c14a64);
+}
+
+.tt-theme-row small { color: var(--muted); text-align: right; }
+
+.tt-trail__deep {
+  margin: 0.6rem 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.tt-chiplist { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.tt-chiplist button {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--era);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.tt-notes { display: grid; gap: 0.45rem; }
+
+.tt-notes button {
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+}
+
+.tt-notes strong { font-size: 0.86rem; color: var(--ink); }
+
+.tt-notes p {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tt-trail__foot {
+  margin: 1rem 0 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ---------- 右下角浮动入口坞 ---------- */
+
+.tt-dock {
+  position: fixed;
+  right: 1rem;
+  bottom: 1.1rem;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(255, 250, 239, 0.6));
+  box-shadow: 0 18px 48px rgba(36, 27, 17, 0.16);
+  backdrop-filter: blur(8px);
+}
+
+.tt-dock button {
+  display: grid;
+  place-items: center;
+  gap: 0;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #493725;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.tt-dock button:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.tt-dock i {
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.tt-dock span {
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+body.modal-open .tt-dock,
+body.modal-open .tt-daily-hint { display: none; }
+
+/* ---------- 每日提醒小气泡 ---------- */
+
+.tt-daily-hint {
+  position: fixed;
+  right: 4.6rem;
+  bottom: 1.6rem;
+  z-index: 80;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  padding: 0.6rem 1rem;
+  font-size: 0.84rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.tt-daily-hint.show { opacity: 1; transform: translateY(0); }
+.tt-daily-hint strong { color: var(--ink); }
+
+/* ---------- 小屏适配 ---------- */
+
+@media (max-width: 620px) {
+  .tt-overlay { padding: 0.7rem; align-items: flex-end; }
+  .tt-overlay__card { max-height: 92vh; border-radius: 18px 18px 12px 12px; padding: 1.2rem 1rem 1rem; }
+  .tt-trail__stats { grid-template-columns: repeat(2, 1fr); }
+  .tt-dock {
+    bottom: calc(0.9rem + env(safe-area-inset-bottom));
+    flex-direction: row;
+  }
+  .tt-dock button { width: 42px; height: 42px; }
+  .tt-daily-hint {
+    right: 0.9rem;
+    bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  }
+}
