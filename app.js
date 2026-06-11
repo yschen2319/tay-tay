@@ -964,24 +964,24 @@ Object.assign(landingCopy, {
   titleHtml: 'The <span class="era-title-accent">12 Eras</span> of Taylor Swift',
   lead: "A journey through every era. Twelve chapters of music, memories, and magic.",
   primary: "EXPLORE THE JOURNEY",
-  secondary: "START FIRST ERA"
+  secondary: ""
 });
 
 heroMapPositions.splice(
   0,
   heroMapPositions.length,
-  { x: 28, y: 78, mx: 22, my: 84 },
-  { x: 45, y: 64, mx: 54, my: 76 },
-  { x: 53, y: 44, mx: 22, my: 49 },
-  { x: 64, y: 34, mx: 63, my: 36 },
-  { x: 80, y: 17, mx: 72, my: 20 },
-  { x: 78, y: 30, mx: 74, my: 43 },
-  { x: 75, y: 45, mx: 70, my: 60 },
-  { x: 89, y: 36, mx: 83, my: 72 },
-  { x: 88, y: 56, mx: 74, my: 86 },
-  { x: 70, y: 72, mx: 80, my: 62 },
-  { x: 55, y: 88, mx: 62, my: 93 },
-  { x: 88, y: 88, mx: 82, my: 97 }
+  { x: 28, y: 78, mx: 11, my: 73 },
+  { x: 45, y: 64, mx: 25, my: 62 },
+  { x: 53, y: 44, mx: 16, my: 43 },
+  { x: 64, y: 34, mx: 42, my: 35 },
+  { x: 80, y: 17, mx: 52, my: 18 },
+  { x: 78, y: 30, mx: 82, my: 30 },
+  { x: 75, y: 45, mx: 75, my: 45 },
+  { x: 89, y: 36, mx: 88, my: 55 },
+  { x: 88, y: 56, mx: 88, my: 68 },
+  { x: 70, y: 72, mx: 62, my: 76 },
+  { x: 55, y: 88, mx: 42, my: 86 },
+  { x: 88, y: 88, mx: 83, my: 89 }
 );
 
 const albumCovers = {
@@ -1201,13 +1201,20 @@ function applyLandingCopy() {
   const title = document.querySelector("#hero-title");
   const lead = document.querySelector(".hero .lead");
   const primary = document.querySelector(".hero-actions .button.primary");
-  const secondary = document.querySelector(".hero-actions .button.secondary");
+  const secondaryButtons = document.querySelectorAll(".hero-actions .button.secondary");
 
   if (micro) micro.textContent = landingCopy.micro;
   if (title) title.innerHTML = landingCopy.titleHtml || landingCopy.title;
   if (lead) lead.textContent = landingCopy.lead;
   if (primary) primary.textContent = landingCopy.primary;
-  if (secondary) secondary.textContent = landingCopy.secondary;
+  secondaryButtons.forEach((secondary) => {
+    if (landingCopy.secondary) {
+      secondary.textContent = landingCopy.secondary;
+      secondary.hidden = false;
+    } else {
+      secondary.hidden = true;
+    }
+  });
 }
 
 function appHistoryState(view = "landing", albumIndex = currentAlbumIndex, section = activeAlbumSection) {
