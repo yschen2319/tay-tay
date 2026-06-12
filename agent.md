@@ -20,3 +20,11 @@
 - 入口：右下角浮动坞 `.tt-dock`（注意 `.rail-tools` 已被 styles.css 用 `display:none!important` 永久隐藏，不要把入口放回侧栏）。
 - 数据键：`tt_notes` / `tt_favs` / `tt_stats`，并复用已有 `taylorSwiftReadSongs`。
 - 文案常量（moods/questions/weeklyThemes/eraBlessings）集中在 companion.js 顶部，可直接修改。
+
+## 艺术层与文案层（art.css / prose.js）
+
+2026-06 第二轮改造新增，两者都是"覆盖层"，删除文件即可回退：
+
+- **art.css**：最后加载的样式层，母题是"老戏票/护照扉页"。关键变量在顶部 `--serif`（衬线栈）与 `--gold`（金线色）。包含：手机端落地（全幅画 + 金双线票框 + 底部时代票根条，票根替代了原先按百分比对位的 map-item，不要恢复绝对定位）、曲目页节目单化（细线圆形播放钮）、时间线编年细线（竖线位置与菱形节点经过对齐计算，改列宽时需同步改 `.timeline-story::before` 的 left）、讲解页收影。styles.css 里有多层 !important 历史堆叠，新覆盖必须写在 art.css 并按需加 !important。
+- **prose.js**：在 app.js 之后、companion.js 之前加载。`albumProse` 对象存放 12 张专辑 thesis/context/life 与 72 首歌 analysis/life 的润色扩写版，结尾 `applyProse()` 合并进 albums。改文案直接编辑字符串；新增歌曲解析时键名必须与 app.js 中 `title` 完全一致（含撇号、问号）。
+- app.js 本轮只动了 3 处：trackStatus 文案、曲目分组名、时间线中段 reflection 改用 lens.text。

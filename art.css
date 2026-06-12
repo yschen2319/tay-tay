@@ -1,0 +1,498 @@
+/* ============================================================
+   art.css — 艺术化样式层（最后加载，覆盖 styles.css）
+   ------------------------------------------------------------
+   母题：一张旧戏票 / 护照扉页。
+   - 细金双线框（signature，贯穿首页与各内页标题）
+   - 衬线大字负责气质，时代色只做点睛
+   - 曲目页 = 节目单；时间线 = 一条带菱形节点的编年细线
+   想调整基调，改下面两个变量即可。
+   ============================================================ */
+
+:root {
+  --serif: Georgia, "Times New Roman", "Songti SC", "STSong", "Noto Serif SC", serif;
+  --gold: #a8842f;
+  --gold-soft: rgba(168, 132, 47, 0.55);
+}
+
+/* ============================================================
+   一、手机端落地封面：整幅画 + 戏票双线框
+   ============================================================ */
+
+@media (max-width: 720px) {
+  body.landing-mode .hero-art {
+    background:
+      linear-gradient(180deg,
+        rgba(244, 234, 216, 0.88) 0%,
+        rgba(244, 234, 216, 0.2) 16%,
+        rgba(244, 234, 216, 0) 32%,
+        rgba(244, 234, 216, 0) 52%,
+        rgba(244, 234, 216, 0.78) 76%,
+        rgba(243, 232, 213, 0.97) 100%),
+      url("./assets/era-path-hero.png") center 32% / cover no-repeat !important;
+  }
+
+  /* 戏票双线框，压在整个封面四周 */
+  body.landing-mode .hero::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    z-index: 5;
+    border: 1px solid var(--gold-soft);
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 4px rgba(244, 234, 216, 0.001), inset 0 0 0 5px rgba(168, 132, 47, 0.3);
+    pointer-events: none;
+  }
+
+  body.landing-mode .hero-content {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    min-height: 100svh !important;
+    width: 100% !important;
+    padding: calc(34px + env(safe-area-inset-top)) 26px 250px !important;
+  }
+
+  body.landing-mode .micro {
+    margin-bottom: 12px !important;
+    color: #8a6a23 !important;
+    font-size: 10px !important;
+    letter-spacing: 0.34em !important;
+    text-transform: uppercase;
+    text-shadow: 0 1px 10px rgba(244, 234, 216, 0.95), 0 0 4px rgba(244, 234, 216, 0.9);
+  }
+
+  body.landing-mode h1 {
+    max-width: 9ch !important;
+    font-family: var(--serif) !important;
+    font-size: clamp(42px, 12vw, 54px) !important;
+    line-height: 1.05 !important;
+    color: #2c2417 !important;
+    text-shadow: 0 1px 0 rgba(244, 234, 216, 0.8), 0 0 22px rgba(244, 234, 216, 0.9);
+  }
+
+  body.landing-mode .lead {
+    max-width: 25ch !important;
+    margin-top: 10px !important;
+    font-size: 13.5px !important;
+    line-height: 1.7 !important;
+    color: #4f4332 !important;
+    text-shadow: 0 1px 6px rgba(244, 234, 216, 0.85);
+  }
+
+  body.landing-mode .hero-actions {
+    margin-top: 18px !important;
+  }
+
+  body.landing-mode .hero-actions .button {
+    font-size: 14px;
+    box-shadow: 0 14px 34px rgba(44, 36, 23, 0.22);
+  }
+
+  /* 时代票根条：横向滑动，替代画面上的对位标签 */
+  body.landing-mode .hero-map {
+    position: absolute !important;
+    inset: auto 16px calc(118px + env(safe-area-inset-bottom)) 16px !important;
+    z-index: 6 !important;
+    display: flex !important;
+    gap: 8px !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 4px 2px !important;
+    overflow-x: auto !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    pointer-events: auto !important;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.landing-mode .hero-map::-webkit-scrollbar { display: none; }
+  body.landing-mode .hero-map::before { content: none !important; }
+
+  body.landing-mode .map-item {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 10px 14px 10px 12px !important;
+    border: 1px solid var(--gold-soft) !important;
+    border-left: 1px dashed rgba(168, 132, 47, 0.55) !important;
+    border-radius: 4px !important;
+    background: rgba(247, 241, 230, 0.82) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 22px rgba(44, 36, 23, 0.1) !important;
+    text-decoration: none !important;
+  }
+
+  body.landing-mode .map-item::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--era);
+    box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--era) 26%, transparent);
+    flex: none;
+  }
+
+  body.landing-mode .map-item strong {
+    font-family: var(--serif) !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #3a2f1d !important;
+    white-space: nowrap;
+    text-shadow: none !important;
+  }
+}
+
+/* 桌面端落地：标题改衬线，呼应整体 */
+body.landing-mode h1 {
+  font-family: var(--serif);
+}
+
+/* ============================================================
+   二、专辑内页公共标题：双细线 + 衬线
+   ============================================================ */
+
+.album-section .tracklist-heading {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--gold-soft);
+  box-shadow: 0 5px 0 -4px rgba(168, 132, 47, 0.22);
+  margin-bottom: clamp(26px, 4vw, 44px);
+}
+
+.album-section .tracklist-heading h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.album-section .tracklist-heading p {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.album-section__header h2 {
+  font-family: var(--serif) !important;
+}
+
+/* ============================================================
+   三、全部曲目：从播放器列表 → 节目单
+   ============================================================ */
+
+.album-section--tracklist .track-row {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--era) 22%, transparent);
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.album-section--tracklist .track-main {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 大号衬线编号，像节目单上的幕次 */
+.album-section--tracklist .track-main > span {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 400;
+  color: color-mix(in srgb, var(--era) 55%, #8a7a5e) !important;
+  opacity: 0.85;
+  min-width: 2.2ch;
+}
+
+.album-section--tracklist .track-main > strong {
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.6vw, 20px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.album-section--tracklist .track-main > small {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 46%, transparent) !important;
+}
+
+.album-section--tracklist .track-main:hover > strong {
+  color: color-mix(in srgb, var(--era) 72%, var(--ink));
+}
+
+/* 播放按钮：大红药丸 → 安静的细线圆钮 */
+.album-section--tracklist .netease-play--row {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  border: 1px solid color-mix(in srgb, var(--era) 45%, transparent) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.album-section--tracklist .netease-play--row .netease-play__text {
+  display: none !important;
+}
+
+.album-section--tracklist .netease-play--row .netease-play__icon {
+  margin: 0 !important;
+  width: 12px !important;
+  height: 12px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.album-section--tracklist .netease-play--row .netease-play__icon::before {
+  border-left-color: color-mix(in srgb, var(--era) 80%, var(--ink)) !important;
+}
+
+.album-section--tracklist .netease-play--row:hover {
+  background: color-mix(in srgb, var(--era) 14%, transparent) !important;
+  transform: scale(1.06);
+}
+
+/* ============================================================
+   四、时间线：卡片堆 → 一条编年细线
+   ============================================================ */
+
+.timeline-panel--deep .timeline-story {
+  position: relative;
+  display: grid;
+  gap: clamp(34px, 5vw, 52px);
+  padding-left: clamp(8px, 1.5vw, 14px);
+}
+
+.timeline-panel--deep .timeline-story::before {
+  content: "";
+  position: absolute;
+  left: calc(clamp(8px, 1.5vw, 14px) + clamp(70px, 8vw, 100px) + clamp(30px, 4vw, 48px) - 17px);
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(180deg,
+    transparent,
+    color-mix(in srgb, var(--era) 55%, transparent) 12%,
+    color-mix(in srgb, var(--era) 55%, transparent) 88%,
+    transparent);
+}
+
+.timeline-panel--deep .timeline-moment {
+  display: grid;
+  grid-template-columns: clamp(70px, 8vw, 100px) 1fr;
+  gap: clamp(30px, 4vw, 48px);
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 菱形节点压在细线上 */
+.timeline-panel--deep .timeline-moment__body {
+  position: relative;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0 0 4px !important;
+}
+
+.timeline-panel--deep .timeline-moment__body::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 10px;
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg) translateX(-50%);
+  background: var(--paper);
+  border: 1.5px solid color-mix(in srgb, var(--era) 75%, var(--ink));
+}
+
+/* 日期：去卡片，做成大号衬线编年数字 */
+.timeline-panel--deep .timeline-moment__date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 2px 0 0 !important;
+  min-width: 0 !important;
+}
+
+.timeline-panel--deep .timeline-moment__date span {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+}
+
+.timeline-panel--deep .timeline-moment__date strong {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.4vw, 27px);
+  font-weight: 500;
+  color: color-mix(in srgb, var(--ink) 86%, var(--era));
+  text-align: right;
+  line-height: 1.1;
+}
+
+.timeline-panel--deep .timeline-moment__body small {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--era) 78%, var(--ink));
+  margin-bottom: 6px;
+}
+
+.timeline-panel--deep .timeline-moment__body h4 {
+  font-family: var(--serif);
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.35;
+  margin: 0 0 8px;
+}
+
+.timeline-panel--deep .timeline-moment__body p {
+  max-width: 62ch;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+/* 关联歌曲：深色药丸 → 安静的下划线指引 */
+.timeline-panel--deep .timeline-song-link {
+  margin-top: 12px;
+  padding: 2px 0 3px !important;
+  border: 0 !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--era) 55%, transparent) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: color-mix(in srgb, var(--era) 70%, var(--ink)) !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+
+.timeline-panel--deep .timeline-song-link::after {
+  content: " →";
+}
+
+.timeline-panel--deep .timeline-song-link:hover {
+  color: var(--ink) !important;
+  border-bottom-color: var(--ink) !important;
+}
+
+/* 结尾的"这条线怎么读"：做成手记引文 */
+.timeline-panel--deep .timeline-coda {
+  margin-top: clamp(38px, 5vw, 56px);
+  padding: 4px 0 4px 22px !important;
+  border: 0 !important;
+  border-left: 1px solid var(--gold-soft) !important;
+  box-shadow: -5px 0 0 -4px rgba(168, 132, 47, 0.22) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.timeline-panel--deep .timeline-coda strong {
+  font-family: var(--serif);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+
+.timeline-panel--deep .timeline-coda p {
+  max-width: 66ch;
+  font-size: 14px;
+  line-height: 1.9;
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
+
+@media (max-width: 720px) {
+  .timeline-panel--deep .timeline-story::before {
+    left: 4px;
+  }
+
+  .timeline-panel--deep .timeline-moment {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-left: 26px !important;
+  }
+
+  .timeline-panel--deep .timeline-moment__date {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .timeline-panel--deep .timeline-moment__date strong {
+    text-align: left;
+  }
+
+  .timeline-panel--deep .timeline-moment__body::before {
+    left: -26px;
+    top: -34px;
+  }
+}
+
+/* ============================================================
+   五、专辑讲解：观点页留白与衬线
+   ============================================================ */
+
+.album-section--reading .reading-thesis,
+.album-section--reading blockquote {
+  font-family: var(--serif);
+}
+
+/* 解读小节卡（01/02/03）：收掉重投影，编号改衬线细体 */
+.song-poem__stanza {
+  box-shadow: none !important;
+  border: 1px solid color-mix(in srgb, var(--era) 18%, rgba(18, 53, 43, 0.12)) !important;
+}
+
+.song-poem__stanza > span {
+  font-family: var(--serif) !important;
+  font-weight: 400 !important;
+  opacity: 0.8;
+}
+
+.song-poem__stanza p {
+  line-height: 1.92 !important;
+}
+
+/* 阅读弹窗与歌曲弹窗标题统一衬线 */
+.song-modal__content h2,
+.reading-detail h3,
+.reading-detail h2 {
+  font-family: var(--serif) !important;
+}
+
+/* ============================================================
+   六、可访问性与动效约束
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--era, var(--ink)) 70%, var(--ink));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-overlay__card,
+  .tt-daily-hint,
+  .album-section--tracklist .netease-play--row {
+    animation: none !important;
+    transition: none !important;
+  }
+}

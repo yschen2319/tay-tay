@@ -1389,8 +1389,8 @@ function renderAlbumGuide(album, prev, next) {
 function getTrackTitlesWithGroups(album) {
   const list = completeTracklists[album.id] || { core: [], expanded: [] };
   return [
-    ...list.core.map((title, index) => ({ title, index: index + 1, group: "标准/主线" })),
-    ...list.expanded.map((title, index) => ({ title, index: list.core.length + index + 1, group: "豪华/扩展" }))
+    ...list.core.map((title, index) => ({ title, index: index + 1, group: "主线" })),
+    ...list.expanded.map((title, index) => ({ title, index: list.core.length + index + 1, group: "加值 / Vault" }))
   ];
 }
 
@@ -1458,7 +1458,7 @@ function buildTimelineMoments(album) {
     const deep = album.deeps[index % album.deeps.length];
     const isFirst = index === 0;
     const isLast = index === album.timeline.length - 1;
-    let reflection = `${lens?.title || album.thesis} 这不是孤立事件，而是把公众处境、创作选择和歌曲叙事推到同一条线上的关键一格。`;
+    let reflection = lens?.text || album.thesis;
     if (isFirst) {
       reflection = `这个节点解释了《${album.title}》为什么会以这种颜色开始：${album.context}`;
     }
@@ -2416,14 +2416,14 @@ function bindSongOpeners(scope = document) {
 function trackStatus(album, title) {
   const hit = album.hits.some((song) => song.title.toLowerCase() === title.toLowerCase());
   const deep = album.deeps.some((song) => song.title.toLowerCase() === title.toLowerCase());
-  return hit ? "已深读·热门" : deep ? "已深读·深藏" : "完整曲目";
+  return hit ? "热门 · 已深读" : deep ? "深藏 · 已深读" : "待你探索";
 }
 
 function renderCompleteTracklist(album) {
   const list = completeTracklists[album.id] || { core: [], expanded: [] };
   const rows = [
-    ...list.core.map((title, index) => ({ title, index: index + 1, group: "标准/主线" })),
-    ...list.expanded.map((title, index) => ({ title, index: list.core.length + index + 1, group: "豪华/扩展" }))
+    ...list.core.map((title, index) => ({ title, index: index + 1, group: "主线" })),
+    ...list.expanded.map((title, index) => ({ title, index: list.core.length + index + 1, group: "加值 / Vault" }))
   ];
   return `
     <section class="complete-tracklist">
