@@ -235,18 +235,19 @@ body.album-mode .album-stage { width: min(1200px, calc(100% - 112px)); margin: a
   --line: rgba(79, 92, 115, .15);
   --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --serif: var(--sans);
-  --glass: linear-gradient(135deg, #ffffffb8, #ffffff59);
-  --glass-border: 1px solid #ffffffc9;
-  --glass-shadow: 0 8px 24px #3045630b, 0 2px 5px #30456308, inset 0 1px 0 #fffffff0, inset 0 -1px 0 #ffffff45;
-  --glass-blur: blur(20px) saturate(1.35);
+  --glass: linear-gradient(125deg, #ffffff80 0%, #ffffff24 30%, #ffffff0d 65%, #ffffff52 100%);
+  --glass-border: 1px solid #ffffffa6;
+  --glass-shadow: 0 12px 32px #354b7520, 0 2px 6px #354b7510, inset 0 2px 2px #fffffff2, inset 2px 0 3px #ffffff80, inset 0 -2px 3px #ffffffa6, inset -1px 0 2px #ffffff66;
+  --glass-blur: blur(18px) saturate(1.65);
 }
 html { background: var(--paper); }
 body, body.landing-mode, body.album-hub-mode, body.album-section-mode {
   background:
-    radial-gradient(ellipse at 5% 18%, #dce9f7a6, transparent 35rem),
-    radial-gradient(ellipse at 94% 36%, #eaddf5a1, transparent 38rem),
-    radial-gradient(ellipse at 45% 80%, #dae9e696, transparent 35rem),
-    #f3f5fa !important;
+    radial-gradient(ellipse at 4% 26rem, #a2c4e7a6, transparent 35rem),
+    radial-gradient(ellipse at 96% 42rem, #bea6e6a1, transparent 36rem),
+    radial-gradient(ellipse at 35% 74rem, #a3d3d0a6, transparent 32rem),
+    radial-gradient(ellipse at 92% 98rem, #d7bad68c, transparent 34rem),
+    linear-gradient(145deg, #e9eff7, #e4eaf3 50%, #eef1f7) !important;
 }
 .site-header { border: 0; }
 .site-wordmark { letter-spacing: .18em; }
@@ -270,7 +271,7 @@ body.landing-mode .hero-actions .button.secondary {
   -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
   font-weight: 500 !important; color: var(--ink) !important;
 }
-body.landing-mode .hero-actions .button.primary { background: linear-gradient(145deg, #ffffffdc, #e6edf9a6) !important; }
+body.landing-mode .hero-actions .button.primary { background: var(--glass) !important; }
 body.landing-mode .hero-art {
   height: clamp(180px, 15vw, 220px) !important; overflow: hidden; border-radius: 30px !important;
   box-shadow: 0 20px 45px #30456312, 0 0 0 1px #ffffff9c !important;
@@ -279,14 +280,14 @@ body.landing-mode .hero-map { gap: 14px !important; padding-top: 22px !important
 body.landing-mode .hero-map .map-item {
   min-height: 0 !important; padding: 10px !important; grid-template-columns: 1fr !important; gap: 0 !important;
   border: var(--glass-border) !important; border-radius: 24px !important;
-  background: linear-gradient(145deg, #ffffffbf, #ffffff52), color-mix(in srgb, var(--era) 11%, transparent) !important;
+  background: var(--glass) !important;
   box-shadow: var(--glass-shadow) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important; backdrop-filter: var(--glass-blur) !important;
   transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease !important;
 }
 body.landing-mode .hero-map .map-item strong { align-self: center !important; padding: 12px 6px 4px !important; font-size: 13px !important; font-weight: 500 !important; line-height: 1.4 !important; letter-spacing: -.01em !important; }
 body.landing-mode .hero-map .map-cover { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
-body.landing-mode .hero-map .map-item:hover { border-color: #fff !important; box-shadow: 0 12px 28px #30456316, inset 0 1px 0 #fff !important; }
+body.landing-mode .hero-map .map-item:hover { border-color: #fff !important; box-shadow: var(--glass-shadow), 0 18px 36px #30456324 !important; }
 body.landing-mode .hero-map .map-item:hover strong { color: var(--ink) !important; }
 /* Discovery and reading controls use one material and a consistent radius. */
 body.landing-mode .swiftie-club { background: transparent; }
@@ -300,7 +301,7 @@ body.landing-mode .swiftie-club { background: transparent; }
   -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
 }
 .club-card { padding: 32px; }
-.club-daily { background: linear-gradient(145deg, #ffffffb8, #ffffff52), color-mix(in srgb, var(--era) 10%, transparent) !important; }
+.club-daily { background: var(--glass) !important; }
 .club-card h3 { font-size: clamp(24px, 2.2vw, 30px); font-weight: 500; line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
 .club-daily h3 { font-size: clamp(24px, 2.2vw, 30px); margin: 0; }
 .club-primary, .club-vault > button, .club-mood-result button,
@@ -308,14 +309,15 @@ body.landing-mode .swiftie-club { background: transparent; }
 .album-guide__nav button, .album-section__back, .album-guide__nav .album-guide__heart {
   min-height: 44px; padding: 12px 20px !important;
   border: var(--glass-border) !important; border-radius: 999px !important;
-  background: linear-gradient(145deg, #ffffffcc, #ffffff78) !important;
+  background: var(--glass) !important;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
   box-shadow: var(--glass-shadow) !important; color: var(--ink) !important;
   font-weight: 500; transition: background 180ms ease, transform 180ms ease;
 }
 .club-shortcuts { gap: 8px; }
 .club-moods button, .club-options button {
   border: 1px solid #ffffffd1; border-radius: 999px;
-  background: #ffffff6b; box-shadow: inset 0 1px 0 #fff9;
+  background: var(--glass); box-shadow: var(--glass-shadow);
 }
 .club-moods button:hover, .club-moods button.active, .club-options button:hover {
   border-color: #64778f; color: #fff; background: #526780; box-shadow: 0 4px 12px #3045631f;
@@ -343,15 +345,15 @@ body.landing-mode .swiftie-club { background: transparent; }
 .album-section__header figure, .track-item, .song-pill { border-radius: 18px !important; }
 .song-modal__card, .album-reading-modal__card, .tt-overlay__card {
   border: var(--glass-border) !important; border-radius: 32px !important;
-  background: #f6f8fcdf !important;
-  box-shadow: 0 28px 90px #142a4a30, inset 0 1px 0 #fff !important;
-  -webkit-backdrop-filter: blur(28px) saturate(1.3); backdrop-filter: blur(28px) saturate(1.3);
+  background: linear-gradient(125deg, #ffffffb3, #eff5fc85 45%, #f8faffb3) !important;
+  box-shadow: var(--glass-shadow), 0 28px 90px #142a4a30 !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.5); backdrop-filter: blur(28px) saturate(1.5);
 }
 .song-modal__cover, .song-modal__content { background: transparent !important; }
 .song-modal__cover { background: linear-gradient(150deg, #ffffff5c, #e4eafa38) !important; }
 .song-modal__content h2 { font-weight: 550 !important; }
-.song-modal__backdrop, .album-reading-modal__backdrop, .tt-overlay__backdrop { background: #27364e38; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.tt-memory textarea { border: 1px solid #ffffffd9; border-radius: 18px; background: #ffffff87; box-shadow: inset 0 2px 5px #30456308; }
+.song-modal__backdrop, .album-reading-modal__backdrop, .tt-overlay__backdrop { background: #27364e24; -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.tt-memory textarea { border: 1px solid #ffffffd9; border-radius: 18px; background: #ffffff45; box-shadow: inset 0 2px 5px #30456312, 0 1px 0 #ffffffb3; }
 .tt-ritual__mood, .tt-ritual__song, .tt-ritual__question, .tt-ritual__theme { border-radius: 20px !important; }
 .tt-era { padding: 20px; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -439,4 +441,22 @@ body.landing-mode .swiftie-club { background: transparent; }
 @media (max-width: 380px) {
   body.landing-mode .hero-map { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   body.landing-mode h1 { font-size: 32px !important; }
+}
+
+/* A narrow specular rim gives the transparent surfaces a visible thickness. */
+.club-card, .directory-card, .reading-entry, .site-header nav { position: relative; }
+body.landing-mode .hero-map .map-item::after,
+.club-card::after, .directory-card::after, .reading-entry::after, .site-header nav::after {
+  content: ""; display: block !important; position: absolute; inset: 0;
+  width: auto; max-width: none; height: auto; margin: 0; padding: 1px; border-radius: inherit; box-shadow: none;
+  background: linear-gradient(135deg, #fff 0%, #ffffff20 32%, #ffffff00 52%, #ffffffb3 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none; transform: none; opacity: .85;
+}
+@media (prefers-reduced-transparency: reduce) {
+  body.landing-mode .hero-map .map-item::after,
+  .club-card::after, .directory-card::after, .reading-entry::after, .site-header nav::after { display: none !important; }
 }
