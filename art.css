@@ -226,3 +226,173 @@ body.album-mode .album-stage { width: min(1200px, calc(100% - 112px)); margin: a
 .album-section__header figure { border-radius: 2px; box-shadow: none; }
 .era-thesis { color: var(--ink) !important; }
 .era-narrative { color: var(--muted) !important; }
+
+/* Glass finish over the editorial layout: surfaces never overlap the artwork. */
+:root {
+  --paper: #f3f5fa;
+  --ink: #232832;
+  --muted: #606976;
+  --line: rgba(79, 92, 115, .15);
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --serif: var(--sans);
+  --glass: linear-gradient(135deg, #ffffffb8, #ffffff59);
+  --glass-border: 1px solid #ffffffc9;
+  --glass-shadow: 0 8px 24px #3045630b, 0 2px 5px #30456308, inset 0 1px 0 #fffffff0, inset 0 -1px 0 #ffffff45;
+  --glass-blur: blur(20px) saturate(1.35);
+}
+html { background: var(--paper); }
+body, body.landing-mode, body.album-hub-mode, body.album-section-mode {
+  background:
+    radial-gradient(ellipse at 5% 18%, #dce9f7a6, transparent 35rem),
+    radial-gradient(ellipse at 94% 36%, #eaddf5a1, transparent 38rem),
+    radial-gradient(ellipse at 45% 80%, #dae9e696, transparent 35rem),
+    #f3f5fa !important;
+}
+.site-header { border: 0; }
+.site-wordmark { letter-spacing: .18em; }
+.site-header nav {
+  gap: 3px; padding: 5px;
+  border: var(--glass-border); border-radius: 999px;
+  background: var(--glass); box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+.site-header nav a { padding: 0 22px; border-radius: 999px; font-weight: 500; transition: background 180ms ease; }
+.site-header nav a:hover { background: #ffffffb3; text-decoration: none; }
+body.landing-mode h1 { font-weight: 600 !important; letter-spacing: -.065em !important; }
+body.landing-mode h1 em { font-style: normal !important; color: #657185 !important; }
+body.landing-mode .hero-content { padding: 42px 0 38px !important; }
+body.landing-mode .hero-actions { gap: 12px !important; }
+body.landing-mode .hero-actions .button.primary,
+body.landing-mode .hero-actions .button.secondary {
+  padding: 12px 21px !important; min-height: 46px !important;
+  border: var(--glass-border) !important; border-radius: 999px !important;
+  background: var(--glass) !important; box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+  font-weight: 500 !important; color: var(--ink) !important;
+}
+body.landing-mode .hero-actions .button.primary { background: linear-gradient(145deg, #ffffffdc, #e6edf9a6) !important; }
+body.landing-mode .hero-art {
+  overflow: hidden; border-radius: 36px !important;
+  box-shadow: 0 20px 45px #30456312, 0 0 0 1px #ffffff9c !important;
+}
+body.landing-mode .hero-map { gap: 14px !important; padding-top: 22px !important; }
+body.landing-mode .hero-map .map-item {
+  min-height: 116px !important; padding: 20px !important;
+  border: var(--glass-border) !important; border-radius: 24px !important;
+  background: linear-gradient(145deg, #ffffffbf, #ffffff52), color-mix(in srgb, var(--era) 11%, transparent) !important;
+  box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important; backdrop-filter: var(--glass-blur) !important;
+  transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease !important;
+}
+body.landing-mode .hero-map .map-item strong { font-size: 15px !important; font-weight: 500 !important; line-height: 1.35 !important; }
+body.landing-mode .hero-map .map-item:hover { border-color: #fff !important; box-shadow: 0 12px 28px #30456316, inset 0 1px 0 #fff !important; }
+body.landing-mode .hero-map .map-item:hover strong { color: var(--ink) !important; }
+/* Discovery and reading controls use one material and a consistent radius. */
+body.landing-mode .swiftie-club { background: transparent; }
+.club-head h2, .club-card h3, .club-mood-result strong { font-weight: 500; }
+.club-head h2 em { font-style: normal; color: #657185; }
+.club-dashboard, .club-play-grid { gap: 24px; }
+.club-play-grid { margin-top: 24px; }
+.club-card, .directory-card, .reading-entry, .tt-era {
+  border: var(--glass-border) !important; border-radius: 28px !important;
+  background: var(--glass) !important; box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+.club-card { padding: 32px; }
+.club-daily { background: linear-gradient(145deg, #ffffffb8, #ffffff52), color-mix(in srgb, var(--era) 10%, transparent) !important; }
+.club-card h3 { font-size: clamp(28px, 3vw, 42px); line-height: 1.15; letter-spacing: -.045em; }
+.club-daily h3 { font-size: clamp(34px, 4vw, 52px); }
+.club-primary, .club-vault > button, .club-mood-result button,
+.club-shortcuts button, .club-section-title button, .tt-btn, .netease-play,
+.album-guide__nav button, .album-section__back, .album-guide__nav .album-guide__heart {
+  min-height: 44px; padding: 12px 20px !important;
+  border: var(--glass-border) !important; border-radius: 999px !important;
+  background: linear-gradient(145deg, #ffffffcc, #ffffff78) !important;
+  box-shadow: var(--glass-shadow) !important; color: var(--ink) !important;
+  font-weight: 500; transition: background 180ms ease, transform 180ms ease;
+}
+.club-shortcuts { gap: 8px; }
+.club-moods button, .club-options button {
+  border: 1px solid #ffffffd1; border-radius: 999px;
+  background: #ffffff6b; box-shadow: inset 0 1px 0 #fff9;
+}
+.club-moods button:hover, .club-moods button.active, .club-options button:hover {
+  border-color: #64778f; color: #fff; background: #526780; box-shadow: 0 4px 12px #3045631f;
+}
+.club-options button { border-radius: 18px; }
+.club-section-title { border: 0; }
+.club-section-title p { font-size: 22px; }
+.album-guide h2 { font-weight: 550 !important; }
+.album-guide blockquote { font-style: normal !important; font-size: 22px !important; }
+.album-guide .album-guide__cover { border-radius: 24px !important; box-shadow: 0 16px 40px #30456320 !important; }
+.directory-card, .reading-entry { padding: 28px !important; }
+.directory-card__copy strong { font-size: 23px !important; font-weight: 500 !important; }
+.directory-card__copy small { line-height: 1.5; }
+.album-directory__cards { gap: 18px !important; }
+.reading-entry strong { font-weight: 500; font-size: 26px; }
+.album-switch-dock, .tt-dock {
+  border: var(--glass-border) !important; border-radius: 28px !important;
+  background: var(--glass) !important; box-shadow: var(--glass-shadow) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important; backdrop-filter: var(--glass-blur) !important;
+}
+.album-switch-dock { padding: 18px !important; }
+.tt-dock { border-radius: 999px !important; }
+.tt-dock button { border-radius: 999px !important; }
+.tt-dock button:hover { background: #ffffffb3 !important; }
+.album-section__header figure, .track-item, .song-pill { border-radius: 18px !important; }
+.song-modal__card, .album-reading-modal__card, .tt-overlay__card {
+  border: var(--glass-border) !important; border-radius: 32px !important;
+  background: #f6f8fcdf !important;
+  box-shadow: 0 28px 90px #142a4a30, inset 0 1px 0 #fff !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.3); backdrop-filter: blur(28px) saturate(1.3);
+}
+.song-modal__cover, .song-modal__content { background: transparent !important; }
+.song-modal__cover { background: linear-gradient(150deg, #ffffff5c, #e4eafa38) !important; }
+.song-modal__content h2 { font-weight: 550 !important; }
+.song-modal__backdrop, .album-reading-modal__backdrop, .tt-overlay__backdrop { background: #27364e38; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.tt-memory textarea { border: 1px solid #ffffffd9; border-radius: 18px; background: #ffffff87; box-shadow: inset 0 2px 5px #30456308; }
+.tt-ritual__mood, .tt-ritual__song, .tt-ritual__question, .tt-ritual__theme { border-radius: 20px !important; }
+.tt-era { padding: 20px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  body.landing-mode .hero-map .map-item:hover { transform: translateY(-3px) !important; }
+  .club-primary:hover, .club-vault > button:hover, .club-mood-result button:hover { transform: translateY(-2px); background: #ffffffe6 !important; }
+}
+@media (max-width: 900px) {
+  .club-shortcuts { gap: 8px; }
+  .club-card { padding: 26px; }
+}
+@media (max-width: 600px) {
+  .site-header nav { padding: 3px; }
+  .site-header nav a { padding: 0 15px; font-size: 11px; }
+  body.landing-mode .hero-content { padding: 28px 0 !important; }
+  body.landing-mode h1 { font-size: clamp(40px, 10.5vw, 60px) !important; }
+  body.landing-mode .hero-actions { gap: 8px !important; }
+  body.landing-mode .hero-actions .button.primary, body.landing-mode .hero-actions .button.secondary { padding: 10px 15px !important; font-size: 11px !important; }
+  body.landing-mode .hero-art { border-radius: 26px !important; }
+  body.landing-mode .hero-map { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; padding-top: 16px !important; }
+  body.landing-mode .hero-map .map-item { padding: 16px !important; border-radius: 21px !important; min-height: 106px !important; }
+  body.landing-mode .hero-map .map-item strong { font-size: 14px !important; }
+  .club-shortcuts button { padding: 10px 13px !important; font-size: 11px; }
+  .club-card { padding: 24px; border-radius: 26px !important; }
+  .club-head h2 { font-size: 34px; }
+  .club-card h3 { font-size: 31px; }
+  .club-daily h3 { font-size: 38px; }
+  .album-directory__cards, .reading-portal__grid { gap: 12px !important; }
+  .directory-card, .reading-entry { padding: 24px !important; }
+  .album-switch-dock { padding: 12px 6px !important; }
+  .song-modal__card { border-radius: 24px !important; overflow: hidden; }
+  .song-modal__view-tabs { background: #f6f8fce6 !important; }
+  .tt-dock { width: max-content; max-width: calc(100% - 40px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass: linear-gradient(135deg, #fff, #edf1f7); }
+  .song-modal__card, .album-reading-modal__card, .tt-overlay__card { background: #f6f8fc !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --glass: linear-gradient(135deg, #fff, #edf1f7); --glass-blur: none; }
+  .song-modal__card, .album-reading-modal__card, .tt-overlay__card { background: #f6f8fc !important; backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+.album-guide__meta, .switch-copy strong { font-family: var(--sans); }
+.switch-copy strong, .tt-dock button { color: var(--ink); }
+.switch-copy small { color: var(--muted); }
