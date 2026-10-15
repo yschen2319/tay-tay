@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Nunito';
+  src: url('./assets/fonts/nunito-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
 /* Editorial edition. Final visual layer for the existing page and reading flows. */
 :root {
   --paper: #f7f5f0;
@@ -233,7 +241,7 @@ body.album-mode .album-stage { width: min(1200px, calc(100% - 112px)); margin: a
   --ink: #232832;
   --muted: #606976;
   --line: rgba(79, 92, 115, .15);
-  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --sans: 'Nunito', ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif;
   --serif: var(--sans);
   --glass: linear-gradient(125deg, #ffffff80 0%, #ffffff24 30%, #ffffff0d 65%, #ffffff52 100%);
   --glass-border: 1px solid #ffffffa6;
@@ -460,3 +468,9 @@ body.landing-mode .hero-map .map-item::after,
   body.landing-mode .hero-map .map-item::after,
   .club-card::after, .directory-card::after, .reading-entry::after, .site-header nav::after { display: none !important; }
 }
+
+/* One rounded family, including legacy track and timeline typography. */
+body, body :where(*) { font-family: var(--sans) !important; }
+.track-main > span { font-variant-numeric: lining-nums tabular-nums; font-weight: 600; }
+.track-main strong { font-weight: 600; line-height: 1.35; }
+.netease-play, .netease-play strong { font-weight: 600; }
