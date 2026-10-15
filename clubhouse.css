@@ -29,11 +29,7 @@ body.landing-mode .tt-dock, body.landing-mode .tt-daily-hint { display: none !im
 .club-mood-result { min-height: 115px; padding-top: 24px; }
 .club-mood-result span { display: block; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .club-mood-result strong { display: block; margin: 8px 0 4px; font: 400 25px/1.2 var(--serif); }
-.club-clock { font-weight: 400; font-variant-numeric: tabular-nums; }
 .club-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.club-quiz__timer { height: 2px; background: var(--line); margin-bottom: 20px; }
-.club-quiz__timer i { display: block; height: 100%; background: var(--ink); transform-origin: left; animation: clubCountdown linear forwards; }
-@keyframes clubCountdown { to { transform: scaleX(0); } }
 .club-answer { padding: 20px 0; border-top: 1px solid var(--line); }
 .club-answer strong { font: 400 24px var(--serif); }
 .club-answer p { font-size: 14px; color: var(--muted); line-height: 1.65; margin-top: 12px; }
@@ -57,4 +53,3 @@ body.landing-mode .tt-dock, body.landing-mode .tt-daily-hint { display: none !im
   .club-daily .club-daily__era { margin-top: 36px; }
   .club-section-title { align-items: start; flex-direction: column; gap: 8px; padding-top: 24px; }
 }
-@media (prefers-reduced-motion: reduce) { .club-quiz__timer i { animation: none; } }

@@ -2,9 +2,8 @@
   "use strict";
 
   const DAILY_KEY = "tt_club_daily";
-  let quizTimer = null;
-  let quizSeconds = 13;
-  let quizLive = false;
+  const QUIZ_KEY = "tt_eras_quiz";
+  const quizModes = { quick: { label: "Quick", count: 5 }, full: { label: "Full", count: 15 } };
 
   const quizBank = [
   {
@@ -152,6 +151,93 @@
   }
 ];
 
+
+  const quizQuestions = [
+    ...quizBank.map((question, index) => ({ ...question, id: `era-${index}`, category: "Eras" })),
+    ...albums.map((album, index) => {
+      const track = completeTracklists[album.id].core[0];
+      return { id: `track-${album.id}`, category: "Tracks", q: `Which album opens with “${track}”?`,
+        options: [album.title, ...[1, 4, 7].map(offset => albums[(index + offset) % albums.length].title)],
+        answer: 0, note: `“${track}” is track one on ${album.title}.` };
+    }),
+    ...albums.map((album) => ({ id: `year-${album.id}`, category: "Years", q: `When was ${album.title} first released?`,
+      options: [String(album.year), ...[...new Set(albums.map(item => String(item.year)))].filter(year => year !== String(album.year)).slice(0, 3)],
+      answer: 0, note: `${album.title} arrived in ${album.year}.` }))
+  ];
+
+  function loadQuiz() {
+    const run = load(QUIZ_KEY, null);
+    if (!run || !quizModes[run.mode] || !Array.isArray(run.ids) || run.ids.length !== quizModes[run.mode].count ||
+        new Set(run.ids).size !== run.ids.length || !run.ids.every(id => quizQuestions.some(q => q.id === id)) ||
+        !Array.isArray(run.answers) || !Number.isInteger(run.index) || run.index < 0 || run.index > run.ids.length) return null;
+    return run;
+  }
+
+  function shuffled(items) {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+
+  function renderQuiz() {
+    const run = loadQuiz();
+    if (!run) return `
+      <div class="club-card__top"><span>Music quiz</span></div>
+      <h3>Know your eras?</h3>
+      <p class="quiz-intro">Albums, tracks &amp; the years between.</p>
+      <div class="quiz-modes">${Object.entries(quizModes).map(([mode, config]) => `
+        <button type="button" data-action="start-quiz" data-mode="${mode}"><strong>${config.label}</strong><small>${config.count} questions · ${mode === "quick" ? "2" : "6"} min</small></button>`).join("")}</div>`;
+    const questions = run.ids.map(id => quizQuestions.find(question => question.id === id));
+    if (run.index === questions.length) {
+      const score = questions.filter((question, index) => run.answers[index] === question.options[question.answer]).length;
+      const missed = questions.map((question, index) => ({ question, answer: run.answers[index] })).filter(item => item.answer !== item.question.options[item.question.answer]);
+      return `<div class="club-card__top"><span>${quizModes[run.mode].label} quiz complete</span></div>
+        <h3 class="quiz-score" tabindex="-1">${score}<small> / ${questions.length}</small></h3>
+        <p class="quiz-intro">${score === questions.length ? "Every era, remembered." : "Another reason to listen again."}</p>
+        <div class="quiz-breakdown">${["Eras", "Tracks", "Years"].map(category => {
+          const group = questions.map((q, i) => ({ q, i })).filter(item => item.q.category === category);
+          return `<span>${category}<strong>${group.filter(item => run.answers[item.i] === item.q.options[item.q.answer]).length} / ${group.length}</strong></span>`;
+        }).join("")}</div>
+        ${missed.length ? `<details class="quiz-review"><summary>Review ${missed.length} missed ${missed.length === 1 ? "answer" : "answers"}</summary><ol>${missed.map(({ question, answer }) => `<li><strong>${escapeText(question.q)}</strong><p>Your answer: ${escapeText(answer)}</p><p>Correct: ${escapeText(question.options[question.answer])}</p><small>${escapeText(question.note)}</small></li>`).join("")}</ol></details>` : ""}
+        <div class="quiz-actions"><button class="club-primary" data-action="start-quiz" data-mode="${run.mode}" type="button">Play again</button><button class="quiz-text-button" data-action="quiz-reset" type="button">Change mode</button></div>`;
+    }
+    const question = questions[run.index];
+    const shift = (run.seed + run.index) % question.options.length;
+    const options = [...question.options.slice(shift), ...question.options.slice(0, shift)];
+    const selected = run.answers[run.index];
+    const correct = question.options[question.answer];
+    return `<div class="club-card__top"><span>${quizModes[run.mode].label} quiz · ${question.category}</span><span>${run.index + 1} / ${questions.length}</span></div>
+      <progress class="quiz-progress" value="${run.index}" max="${questions.length}" aria-label="Questions completed">${run.index} / ${questions.length}</progress>
+      <h3 class="quiz-question" tabindex="-1">${escapeText(question.q)}</h3>
+      <div class="club-options">${options.map((option, index) => `<button type="button" data-action="quiz-answer" data-index="${index}" ${selected !== undefined ? "disabled" : ""} class="${selected !== undefined && option === correct ? "is-correct" : selected === option ? "is-wrong" : ""}">${escapeText(option)}${selected !== undefined && option === correct ? '<span class="quiz-option-status">Correct answer</span>' : selected === option ? '<span class="quiz-option-status">Your answer</span>' : ""}</button>`).join("")}</div>
+      ${selected !== undefined ? `<div class="club-answer" role="status" tabindex="-1"><strong>${selected === correct ? "Correct." : "Not quite."}</strong><p>${escapeText(question.note)}</p></div>` : ""}
+      <div class="quiz-actions">${selected !== undefined ? `<button type="button" class="club-primary" data-action="quiz-next">${run.index === questions.length - 1 ? "See results" : "Next question"}</button>` : '<span class="quiz-save-hint">Progress saved here</span>'}<button type="button" class="quiz-text-button" data-action="quiz-reset">Change mode</button></div>`;
+  }
+
+  function startQuiz(mode) {
+    if (!quizModes[mode]) return;
+    const counts = mode === "quick" ? [2, 2, 1] : [5, 5, 5];
+    const ids = ["Eras", "Tracks", "Years"].flatMap((category, index) => shuffled(quizQuestions.filter(question => question.category === category)).slice(0, counts[index]).map(question => question.id));
+    save(QUIZ_KEY, { mode, ids: shuffled(ids), answers: [], index: 0, seed: Math.floor(Math.random() * 10000) });
+    render();
+    document.querySelector(".quiz-question")?.focus({ preventScroll: true });
+  }
+
+  function answerQuiz(index) {
+    const run = loadQuiz();
+    if (!run || run.index >= run.ids.length || run.answers[run.index] !== undefined) return;
+    const question = quizQuestions.find(item => item.id === run.ids[run.index]);
+    if (!Number.isInteger(index) || index < 0 || index >= question.options.length) return;
+    const shift = (run.seed + run.index) % question.options.length;
+    run.answers[run.index] = question.options[(index + shift) % question.options.length];
+    save(QUIZ_KEY, run);
+    render();
+    document.querySelector(".club-answer")?.focus({ preventScroll: true });
+  }
+
   const moods = [
     { label: "Defiant", albums: ["reputation", "speak-now"] },
     { label: "Heartbroken", albums: ["red", "ttpd"] },
@@ -214,7 +300,7 @@
   function dailyState() {
     const state = load(DAILY_KEY, {});
     if (state.day !== dayNumber()) {
-      return { day: dayNumber(), missions: [], quizChoice: null, moodIndex: null, vaultRevealed: false };
+      return { day: dayNumber(), missions: [], moodIndex: null, vaultRevealed: false };
     }
     state.missions = Array.isArray(state.missions) ? state.missions : [];
     return state;
@@ -262,47 +348,35 @@
     const focusIndex = focused?.dataset.index;
     const state = dailyState();
     const today = songOfDay();
-    const quiz = quizBank[dayNumber() % quizBank.length];
-    const shift = dayNumber() % quiz.options.length;
-    const options = [...quiz.options.slice(shift), ...quiz.options.slice(0, shift)];
-    const answer = (quiz.answer - shift + quiz.options.length) % quiz.options.length;
-    const answered = state.quizChoice !== null;
-    const correct = Number(state.quizChoice) === answer;
     const selection = state.moodIndex === null ? null : moodSong(state.moodIndex);
     const vault = vaultSong();
     root.innerHTML = `
       <header class="club-head">
-        <div><h2>Today</h2></div>
+        <div><h2>Discover</h2><p class="club-intro">Find a song. Make a memory.</p></div>
         <nav class="club-shortcuts" aria-label="Your collection">
-          <button type="button" data-action="ritual">Ritual ↗</button>
-          <button type="button" data-action="passport">Passport ↗</button>
-          <button type="button" data-action="trail">Collection ↗</button>
+          <button type="button" data-action="ritual">Daily ritual ↗</button>
+          <button type="button" data-action="passport">Listening passport ↗</button>
+          <button type="button" data-action="trail">My notes ↗</button>
         </nav>
       </header>
       <div class="club-dashboard">
         <article class="club-card club-daily" style="--era:${today.album.color}">
-          <div class="club-card__top"><span>On repeat</span><small>${todayLabel()}</small></div>
+          <div class="club-card__top"><span>Today’s song</span><small>${todayLabel()}</small></div>
           <img class="club-cover" src="${albumCovers[today.album.id]}" alt="" loading="lazy" decoding="async" />
           <h3>${escapeText(today.title)}</h3>
-          <button class="club-primary" type="button" data-action="today-song">Open ↗</button>
+          <button class="club-primary" type="button" data-action="today-song">Read & listen ↗</button>
         </article>
         <article class="club-card club-mood" id="clubMood">
-          <h3>Your mood</h3>
+          <h3>Find a song</h3><p class="quiz-intro">Choose your mood.</p>
           <div class="club-moods">${moods.map((mood,index) => `<button type="button" aria-pressed="${state.moodIndex === index}" class="${state.moodIndex === index ? "active" : ""}" data-action="pick-mood" data-index="${index}">${mood.label}</button>`).join("")}</div>
-          <div class="club-mood-result" aria-live="polite">${selection ? `<strong>${escapeText(selection.title)}</strong><button type="button" data-action="mood-song">Open ↗</button>` : ""}</div>
+          <div class="club-mood-result" aria-live="polite">${selection ? `<strong>${escapeText(selection.title)}</strong><button type="button" data-action="mood-song">Read & listen ↗</button>` : ""}</div>
         </article>
       </div>
       <div class="club-play-grid">
-        <article class="club-card club-quiz" id="clubQuiz">
-          <div class="club-card__top"><span>Quick quiz</span><strong class="club-clock">${answered ? "DONE" : quizLive ? `${quizSeconds}s` : "13s"}</strong></div>
-          <h3>${quizLive || answered ? escapeText(quiz.q) : "Know your eras?"}</h3>
-          ${!quizLive && !answered ? `<button class="club-primary" type="button" data-action="start-quiz">Play ↗</button>` : ""}
-          ${quizLive && !answered ? `<div class="club-quiz__timer"><i style="animation-duration:${quizSeconds}s"></i></div><div class="club-options">${options.map((option,index) => `<button type="button" data-action="quiz-answer" data-index="${index}">${escapeText(option)}</button>`).join("")}</div>` : ""}
-          ${answered ? `<div class="club-answer ${correct ? "correct" : ""}" role="status" tabindex="-1"><strong>${correct ? "You know it." : state.quizChoice === "timeout" ? "Time's up." : "Almost."}</strong><p>${escapeText(quiz.note)}</p></div>` : ""}
-        </article>
+        <article class="club-card club-quiz" id="clubQuiz" aria-label="Music quiz">${renderQuiz()}</article>
         <article class="club-card club-vault ${state.vaultRevealed ? "open" : ""}">
-          <h3>${state.vaultRevealed ? escapeText(vault.title) : "From the vault"}</h3>
-          <button type="button" data-action="${state.vaultRevealed ? "vault-song" : "reveal-vault"}">${state.vaultRevealed ? "Open ↗" : "Reveal ↗"}</button>
+          <h3>${state.vaultRevealed ? escapeText(vault.title) : "Hidden gems"}</h3>${state.vaultRevealed ? "" : '<p class="quiz-intro">A less-played song, worth your time.</p>'}
+          <button type="button" data-action="${state.vaultRevealed ? "vault-song" : "reveal-vault"}">${state.vaultRevealed ? "Read & listen ↗" : "Find a deep cut ↗"}</button>
         </article>
       </div>
     `;
@@ -310,26 +384,6 @@
       const replacement = [...root.querySelectorAll("[data-action]")].find((button) => button.dataset.action === focusAction && button.dataset.index === focusIndex);
       (replacement || root.querySelector(".club-answer, [data-action='quiz-answer'], [data-action='vault-song']"))?.focus({ preventScroll: true });
     }
-  }
-
-  function startQuiz() {
-    const state = dailyState();
-    if (state.quizChoice !== null || quizLive) return;
-    quizLive = true;
-    quizSeconds = 13;
-    render();
-    clearInterval(quizTimer);
-    quizTimer = setInterval(() => {
-      quizSeconds -= 1;
-      const clock = document.querySelector(".club-clock");
-      if (clock) clock.textContent = `${quizSeconds}s`;
-      if (quizSeconds <= 0) {
-        clearInterval(quizTimer);
-        quizLive = false;
-        completeMission("quiz", { quizChoice: "timeout" });
-        render();
-      }
-    }, 1000);
   }
 
   function handleAction(target) {
@@ -345,13 +399,22 @@
     } else if (action === "today-song") {
       openSong(songOfDay());
     } else if (action === "start-quiz") {
-      startQuiz();
+      startQuiz(target.dataset.mode);
       document.getElementById("clubQuiz")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
     } else if (action === "quiz-answer") {
-      clearInterval(quizTimer);
-      quizLive = false;
-      completeMission("quiz", { quizChoice: Number(target.dataset.index) });
+      answerQuiz(Number(target.dataset.index));
+    } else if (action === "quiz-next") {
+      const run = loadQuiz();
+      if (!run || run.index >= run.ids.length || run.answers[run.index] === undefined) return;
+      run.index += 1;
+      save(QUIZ_KEY, run);
+      if (run.index === run.ids.length) completeMission("quiz");
       render();
+      document.querySelector(".quiz-question, .quiz-score")?.focus({ preventScroll: true });
+    } else if (action === "quiz-reset") {
+      save(QUIZ_KEY, null);
+      render();
+      document.querySelector('[data-action="start-quiz"]')?.focus({ preventScroll: true });
     } else if (action === "mood-focus") {
       document.getElementById("clubMood")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
     } else if (action === "pick-mood") {
@@ -378,6 +441,7 @@
       const target = event.target.closest("[data-action]");
       if (target) handleAction(target);
     });
+    document.querySelectorAll("[data-open-collection]").forEach(button => button.addEventListener("click", () => window.SwiftieCompanion?.openTrajectory()));
     render();
     window.addEventListener("storage", render);
     document.addEventListener("visibilitychange", () => {

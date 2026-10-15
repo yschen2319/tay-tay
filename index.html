@@ -37,23 +37,24 @@
 
     <header class="site-header">
       <a class="site-wordmark" href="#top" data-site-home>TAYLOR SWIFT</a>
-      <nav aria-label="Main navigation"><a href="#heroMap" data-site-explore>Explore</a><a href="#swiftieClub" data-site-daily>Daily</a></nav>
+      <nav aria-label="Main navigation"><a href="#albumCollection" data-site-explore>Albums</a><a href="#swiftieClub" data-site-daily>Discover</a><button type="button" data-open-collection>My notes</button></nav>
     </header>
     <main id="top">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-content">
-          <h1 id="hero-title">Every era.</h1>
+          <div><p class="hero-kicker">An independent fan archive</p><h1 id="hero-title">The album archive.</h1><p class="lead">Songs, stories &amp; your own notes.</p></div>
           <div class="hero-intro">
-            <div class="hero-actions"><button class="button primary" id="todaySongBtn" type="button">Discover ↗</button></div>
+            <div class="hero-actions"><a class="button primary" href="#albumCollection" data-site-explore>Explore albums ↓</a></div>
           </div>
         </div>
         <div class="hero-art" role="img" aria-label="A painted path through twelve colourful musical worlds"></div>
+        <div class="collection-heading" id="albumCollection"><h2>Albums</h2><p>Choose an era ↘</p></div>
         <nav class="hero-map" id="heroMap" aria-label="Explore all twelve albums"></nav>
       </section>
 
-      <section id="swiftieClub" class="swiftie-club" aria-label="The daily edit">
+      <section id="swiftieClub" class="swiftie-club" aria-label="Discover songs and activities">
         <div id="clubApp" class="club-app">
-          <p class="club-loading">Opening the daily edit…</p>
+          <p class="club-loading">Loading…</p>
         </div>
       </section>
 

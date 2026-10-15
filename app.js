@@ -142,10 +142,10 @@ let applyingHistoryState = false;
 
 const landingCopy = {
   micro: "",
-  title: "Every era.",
-  titleHtml: 'Every era.',
-  lead: "",
-  primary: "Discover ↗",
+  title: "The album archive.",
+  titleHtml: 'The album archive.',
+  lead: "Songs, stories & your own notes.",
+  primary: "Explore albums ↓",
   secondary: ""
 };
 
@@ -1751,7 +1751,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.querySelectorAll("[data-site-home], [data-site-explore], [data-site-daily]").forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
-    const target = link.hasAttribute("data-site-explore") ? "#heroMap" : link.hasAttribute("data-site-daily") ? "#swiftieClub" : "#top";
+    const target = link.hasAttribute("data-site-explore") ? "#albumCollection" : link.hasAttribute("data-site-daily") ? "#swiftieClub" : "#top";
     showLanding({ pushHistory: document.body.classList.contains("album-mode") });
     requestAnimationFrame(() => document.querySelector(target)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }));
   });
