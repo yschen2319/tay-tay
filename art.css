@@ -258,10 +258,10 @@ body, body.landing-mode, body.album-hub-mode, body.album-section-mode {
 }
 .site-header nav a { padding: 0 22px; border-radius: 999px; font-weight: 500; transition: background 180ms ease; }
 .site-header nav a:hover { background: #ffffffb3; text-decoration: none; }
-body.landing-mode h1 { font-weight: 600 !important; letter-spacing: -.065em !important; }
+body.landing-mode h1 { font-size: clamp(36px, 4vw, 54px) !important; font-weight: 500 !important; letter-spacing: -.045em !important; }
 body.landing-mode h1 em { font-style: normal !important; color: #657185 !important; }
-body.landing-mode .hero-content { padding: 42px 0 38px !important; }
-body.landing-mode .hero-actions { gap: 12px !important; }
+body.landing-mode .hero-content { grid-template-columns: 1fr auto !important; gap: 20px; padding: 24px 0 28px !important; }
+body.landing-mode .hero-actions { gap: 12px !important; margin: 0 !important; }
 body.landing-mode .hero-actions .button.primary,
 body.landing-mode .hero-actions .button.secondary {
   padding: 12px 21px !important; min-height: 46px !important;
@@ -272,19 +272,20 @@ body.landing-mode .hero-actions .button.secondary {
 }
 body.landing-mode .hero-actions .button.primary { background: linear-gradient(145deg, #ffffffdc, #e6edf9a6) !important; }
 body.landing-mode .hero-art {
-  overflow: hidden; border-radius: 36px !important;
+  height: clamp(180px, 15vw, 220px) !important; overflow: hidden; border-radius: 30px !important;
   box-shadow: 0 20px 45px #30456312, 0 0 0 1px #ffffff9c !important;
 }
 body.landing-mode .hero-map { gap: 14px !important; padding-top: 22px !important; }
 body.landing-mode .hero-map .map-item {
-  min-height: 116px !important; padding: 20px !important;
+  min-height: 0 !important; padding: 10px !important; grid-template-columns: 1fr !important; gap: 0 !important;
   border: var(--glass-border) !important; border-radius: 24px !important;
   background: linear-gradient(145deg, #ffffffbf, #ffffff52), color-mix(in srgb, var(--era) 11%, transparent) !important;
   box-shadow: var(--glass-shadow) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important; backdrop-filter: var(--glass-blur) !important;
   transition: transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease !important;
 }
-body.landing-mode .hero-map .map-item strong { font-size: 15px !important; font-weight: 500 !important; line-height: 1.35 !important; }
+body.landing-mode .hero-map .map-item strong { align-self: center !important; padding: 12px 6px 4px !important; font-size: 13px !important; font-weight: 500 !important; line-height: 1.4 !important; letter-spacing: -.01em !important; }
+body.landing-mode .hero-map .map-cover { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
 body.landing-mode .hero-map .map-item:hover { border-color: #fff !important; box-shadow: 0 12px 28px #30456316, inset 0 1px 0 #fff !important; }
 body.landing-mode .hero-map .map-item:hover strong { color: var(--ink) !important; }
 /* Discovery and reading controls use one material and a consistent radius. */
@@ -300,8 +301,8 @@ body.landing-mode .swiftie-club { background: transparent; }
 }
 .club-card { padding: 32px; }
 .club-daily { background: linear-gradient(145deg, #ffffffb8, #ffffff52), color-mix(in srgb, var(--era) 10%, transparent) !important; }
-.club-card h3 { font-size: clamp(28px, 3vw, 42px); line-height: 1.15; letter-spacing: -.045em; }
-.club-daily h3 { font-size: clamp(34px, 4vw, 52px); }
+.club-card h3 { font-size: clamp(24px, 2.2vw, 30px); font-weight: 500; line-height: 1.25; letter-spacing: -.025em; margin: 0 0 24px; }
+.club-daily h3 { font-size: clamp(24px, 2.2vw, 30px); margin: 0; }
 .club-primary, .club-vault > button, .club-mood-result button,
 .club-shortcuts button, .club-section-title button, .tt-btn, .netease-play,
 .album-guide__nav button, .album-section__back, .album-guide__nav .album-guide__heart {
@@ -322,11 +323,11 @@ body.landing-mode .swiftie-club { background: transparent; }
 .club-options button { border-radius: 18px; }
 .club-section-title { border: 0; }
 .club-section-title p { font-size: 22px; }
-.album-guide h2 { font-weight: 550 !important; }
+.album-guide h2 { font-size: clamp(32px, 4vw, 54px) !important; font-weight: 500 !important; }
 .album-guide blockquote { font-style: normal !important; font-size: 22px !important; }
 .album-guide .album-guide__cover { border-radius: 24px !important; box-shadow: 0 16px 40px #30456320 !important; }
 .directory-card, .reading-entry { padding: 28px !important; }
-.directory-card__copy strong { font-size: 23px !important; font-weight: 500 !important; }
+.directory-card__copy strong { font-size: 20px !important; font-weight: 500 !important; }
 .directory-card__copy small { line-height: 1.5; }
 .album-directory__cards { gap: 18px !important; }
 .reading-entry strong { font-weight: 500; font-size: 26px; }
@@ -364,19 +365,19 @@ body.landing-mode .swiftie-club { background: transparent; }
 @media (max-width: 600px) {
   .site-header nav { padding: 3px; }
   .site-header nav a { padding: 0 15px; font-size: 11px; }
-  body.landing-mode .hero-content { padding: 28px 0 !important; }
-  body.landing-mode h1 { font-size: clamp(40px, 10.5vw, 60px) !important; }
+  body.landing-mode .hero-content { padding: 20px 0 24px !important; gap: 12px; }
+  body.landing-mode h1 { font-size: 36px !important; }
   body.landing-mode .hero-actions { gap: 8px !important; }
   body.landing-mode .hero-actions .button.primary, body.landing-mode .hero-actions .button.secondary { padding: 10px 15px !important; font-size: 11px !important; }
-  body.landing-mode .hero-art { border-radius: 26px !important; }
-  body.landing-mode .hero-map { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; padding-top: 16px !important; }
-  body.landing-mode .hero-map .map-item { padding: 16px !important; border-radius: 21px !important; min-height: 106px !important; }
-  body.landing-mode .hero-map .map-item strong { font-size: 14px !important; }
+  body.landing-mode .hero-art { height: 180px !important; border-radius: 26px !important; }
+  body.landing-mode .hero-map { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px !important; padding-top: 16px !important; }
+  body.landing-mode .hero-map .map-item { padding: 7px !important; border-radius: 20px !important; min-height: 0 !important; }
+  body.landing-mode .hero-map .map-item strong { font-size: 12px !important; padding: 10px 3px 4px !important; }
   .club-shortcuts button { padding: 10px 13px !important; font-size: 11px; }
   .club-card { padding: 24px; border-radius: 26px !important; }
-  .club-head h2 { font-size: 34px; }
-  .club-card h3 { font-size: 31px; }
-  .club-daily h3 { font-size: 38px; }
+  .club-head h2 { font-size: 30px; }
+  .club-card h3 { font-size: 24px; }
+  .club-daily h3 { font-size: 24px; }
   .album-directory__cards, .reading-portal__grid { gap: 12px !important; }
   .directory-card, .reading-entry { padding: 24px !important; }
   .album-switch-dock { padding: 12px 6px !important; }
@@ -396,3 +397,46 @@ body.landing-mode .swiftie-club { background: transparent; }
 .album-guide__meta, .switch-copy strong { font-family: var(--sans); }
 .switch-copy strong, .tt-dock button { color: var(--ink); }
 .switch-copy small { color: var(--muted); }
+
+/* Let artwork lead; keep labels close to the surface they belong to. */
+.site-wordmark { font-size: 12px; letter-spacing: .12em; font-weight: 500; }
+.club-head { align-items: center; margin-bottom: 28px; }
+.club-head h2 { font-size: 36px; font-weight: 500; letter-spacing: -.035em; }
+.club-card__top { letter-spacing: .02em; margin-bottom: 24px; font-size: 12px; }
+.club-dashboard, .club-play-grid { grid-template-columns: 1fr 1fr; }
+.club-daily { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px 24px; align-content: start; align-items: center; }
+.club-daily .club-card__top { grid-column: 1 / -1; margin-bottom: 6px; }
+.club-cover { grid-column: 1; grid-row: 2 / 4; width: 96px; aspect-ratio: 1; object-fit: cover; border-radius: 18px; box-shadow: 0 8px 20px #30456318; }
+.club-daily h3, .club-daily .club-primary { grid-column: 2; }
+.club-daily .club-primary { justify-self: start; margin-top: 0; }
+.club-mood-result:empty { display: none; }
+.club-mood-result { min-height: 0; }
+.club-mood-result strong { margin-bottom: 12px; font-size: 22px; }
+.album-guide__top { grid-template-rows: auto 1fr 1fr; align-items: start; }
+.album-guide__cover-wrap { grid-row: 2 / 4; }
+.album-guide h2 { align-self: end; }
+.album-guide__meta { margin: 16px 0 0 !important; }
+.directory-card { min-height: 88px !important; align-items: center !important; }
+.directory-card__arrow { font-size: 22px; }
+.song-modal__content h2 { font-weight: 500 !important; }
+.song-modal__eyebrow { font-weight: 400; letter-spacing: .02em; }
+.tt-memory { border: 0 !important; padding-top: 0 !important; }
+.tt-memory__title { letter-spacing: .02em; }
+@media (max-width: 600px) {
+  .club-head { gap: 16px; align-items: start; }
+  .club-head h2 { font-size: 30px; }
+  .club-dashboard, .club-play-grid { grid-template-columns: 1fr; gap: 16px; }
+  .club-play-grid { margin-top: 16px; }
+  .club-daily { grid-template-columns: 76px minmax(0, 1fr); gap: 16px; }
+  .club-cover { width: 76px; }
+  .club-daily h3 { font-size: 22px; }
+  .club-card { padding: 24px; }
+  .album-guide__top { grid-template-rows: auto; }
+  .album-guide__cover-wrap { grid-row: auto; }
+  .album-guide h2 { font-size: 34px !important; }
+  .album-guide__meta { margin: 12px 0 0 !important; }
+}
+@media (max-width: 380px) {
+  body.landing-mode .hero-map { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  body.landing-mode h1 { font-size: 32px !important; }
+}

@@ -18,7 +18,7 @@ function renderRail() {
     mapLink.className = "map-item";
     mapLink.href = `#album-${album.id}`;
     mapLink.style.setProperty("--era", album.color);
-    mapLink.innerHTML = `<span class="map-number">${String(index + 1).padStart(2, "0")}</span><strong>${album.title}</strong><small>${album.year}</small>`;
+    mapLink.innerHTML = `<img class="map-cover" src="${albumCovers[album.id]}" alt="" loading="lazy" decoding="async" /><strong>${album.title}</strong>`;
     map.appendChild(mapLink);
   });
 }
@@ -142,11 +142,11 @@ let applyingHistoryState = false;
 
 const landingCopy = {
   micro: "",
-  title: "A world of eras.",
-  titleHtml: 'A world of <em>eras.</em>',
-  lead: "Twelve albums. A thousand ways to feel.",
-  primary: "Find your song ↗",
-  secondary: "The daily edit ↓"
+  title: "Every era.",
+  titleHtml: 'Every era.',
+  lead: "",
+  primary: "Discover ↗",
+  secondary: ""
 };
 
 const heroMapPositions = [
@@ -264,7 +264,7 @@ renderRail = function () {
       mapLink.style.setProperty("--map-mobile-x", `${position.mx}%`);
       mapLink.style.setProperty("--map-mobile-y", `${position.my}%`);
       mapLink.setAttribute("aria-label", album.title);
-      mapLink.innerHTML = `<span class="map-number">${String(index + 1).padStart(2, "0")}</span><strong>${album.title}</strong><small>${album.year}</small>`;
+      mapLink.innerHTML = `<img class="map-cover" src="${albumCovers[album.id]}" alt="" loading="lazy" decoding="async" /><strong>${album.title}</strong>`;
       mapLink.addEventListener("click", (event) => {
         event.preventDefault();
         selectAlbum(index);
@@ -436,9 +436,6 @@ function renderAlbumSwitchDock(prev, album, next) {
 }
 
 function renderAlbumGuide(album, prev, next) {
-  const directorySections = albumDirectorySections.map((section) =>
-    section.key === "reading" ? { ...section, subtitle: `The story behind the record` } : section
-  );
   return `
     <article class="album album-guide" id="album-${album.id}" style="--era:${album.color}; --cover:url('${albumCovers[album.id] || ""}')">
       <div class="album-atmosphere" aria-hidden="true"></div>
@@ -448,16 +445,14 @@ function renderAlbumGuide(album, prev, next) {
           <button class="album-guide__back" type="button" data-home-page aria-label="Home">${renderDirectoryIcon("back")}</button>
           <button class="album-guide__heart" type="button" data-home-page aria-label="Explore eras">All eras ↗</button>
         </div>
-        <p class="album-guide__label">Taylor Swift</p>
         <h2>${album.title}</h2>
-        <p class="album-guide__meta">${album.year} · ${album.genre}</p>
+        <p class="album-guide__meta">${album.year}</p>
         <div class="album-guide__cover-wrap">
           <figure class="album-guide__cover">
             <img src="${albumCovers[album.id] || ""}" alt="${album.title} album cover" loading="eager" fetchpriority="high" decoding="async" />
           </figure>
           <div class="album-guide__vinyl" aria-hidden="true"></div>
         </div>
-        <blockquote>${album.thesis}</blockquote>
       </div>
       <section class="album-directory" aria-label="${escapeHtml(album.title)} Explore this era">
         <div class="album-directory__title">
@@ -465,14 +460,13 @@ function renderAlbumGuide(album, prev, next) {
           <strong>Explore this era</strong>
         </div>
         <div class="album-directory__cards">
-          ${directorySections
+          ${albumDirectorySections
             .map(
               (section) => `
                 <button class="directory-card directory-card--${section.key}" type="button" data-album-section="${section.key}">
                   <span class="directory-card__icon">${renderDirectoryIcon(section.icon)}</span>
                   <span class="directory-card__copy">
                     <strong>${section.title}</strong>
-                    <small>${section.subtitle}</small>
                   </span>
                   <span class="directory-card__arrow">→</span>
                 </button>
@@ -1271,7 +1265,7 @@ function renderLyricReader(detail) {
   const lines = lyricEntry.lyrics.split("\n");
   return `
     <div class="lyric-reader" aria-label="Lyrics">
-      <p class="lyric-kicker">Original English Lyrics</p>
+      <p class="lyric-kicker">Lyrics</p>
       ${lines
         .map((line) => {
           const trimmed = line.trim();
@@ -1428,13 +1422,8 @@ function openSongModal(title) {
       ${renderLyricReader(detail)}
     </div>
     <div class="song-modal__content song-pane--analysis">
-      <p class="song-modal__eyebrow">${album.title} · ${detail.group} · ${detail.status}</p>
+      <p class="song-modal__eyebrow">${album.title}</p>
       <h2 id="songModalTitle">${escapeHtml(detail.title)}</h2>
-      <div class="song-modal__meta">
-        <span>${album.year}</span>
-        <span>${album.cn}</span>
-        <span>Track ${String(detail.trackNumber).padStart(2, "0")}</span>
-      </div>
       <section class="netease-panel">
         ${renderNeteasePlay(album, detail.title, "modal")}
       </section>

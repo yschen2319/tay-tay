@@ -199,10 +199,6 @@
       .replaceAll('"', "&quot;");
   }
 
-  function songKey(title) {
-    return String(title).toLowerCase().trim();
-  }
-
   function allSongs() {
     return albums.flatMap((album) => {
       const list = completeTracklists[album.id] || { core: [], expanded: [] };
@@ -236,15 +232,6 @@
     updateDaily({ ...extra, missions });
   }
 
-  function eraStats(read) {
-    return albums.map((album, index) => {
-      const list = completeTracklists[album.id] || { core: [], expanded: [] };
-      const tracks = [...list.core, ...list.expanded];
-      const done = tracks.filter((title) => read.has(songKey(title))).length;
-      return { album, index, done, total: tracks.length, lit: done >= Math.min(13, tracks.length) };
-    });
-  }
-
   function moodSong(index) {
     const mood = moods[index];
     const candidates = albums.filter((album) => mood.albums.includes(album.id));
@@ -275,8 +262,6 @@
     const focusIndex = focused?.dataset.index;
     const state = dailyState();
     const today = songOfDay();
-    const eras = eraStats(new Set(load("taylorSwiftReadSongs", [])));
-    const litCount = eras.filter((era) => era.lit).length;
     const quiz = quizBank[dayNumber() % quizBank.length];
     const shift = dayNumber() % quiz.options.length;
     const options = [...quiz.options.slice(shift), ...quiz.options.slice(0, shift)];
@@ -287,44 +272,39 @@
     const vault = vaultSong();
     root.innerHTML = `
       <header class="club-head">
-        <div><h2>A little daily <em>ritual.</em></h2><p class="club-intro">A song, a feeling, a reason to return.</p></div>
+        <div><h2>Today</h2></div>
         <nav class="club-shortcuts" aria-label="Your collection">
-          <button type="button" data-action="ritual">Daily ritual ↗</button>
+          <button type="button" data-action="ritual">Ritual ↗</button>
           <button type="button" data-action="passport">Passport ↗</button>
           <button type="button" data-action="trail">Collection ↗</button>
         </nav>
       </header>
       <div class="club-dashboard">
         <article class="club-card club-daily" style="--era:${today.album.color}">
-          <div class="club-card__top"><span>01 / ON REPEAT</span><small>${todayLabel()}</small></div>
-          <p class="club-daily__era">${escapeText(today.album.title)} · ${today.album.year}</p>
+          <div class="club-card__top"><span>On repeat</span><small>${todayLabel()}</small></div>
+          <img class="club-cover" src="${albumCovers[today.album.id]}" alt="" loading="lazy" decoding="async" />
           <h3>${escapeText(today.title)}</h3>
-          <p>${escapeText(today.album.thesis)}</p>
-          <button class="club-primary" type="button" data-action="today-song">Open song ↗</button>
+          <button class="club-primary" type="button" data-action="today-song">Open ↗</button>
         </article>
         <article class="club-card club-mood" id="clubMood">
-          <div class="club-card__top"><span>02 / IN THE MOOD</span></div>
-          <h3>How does<br>today feel?</h3>
+          <h3>Your mood</h3>
           <div class="club-moods">${moods.map((mood,index) => `<button type="button" aria-pressed="${state.moodIndex === index}" class="${state.moodIndex === index ? "active" : ""}" data-action="pick-mood" data-index="${index}">${mood.label}</button>`).join("")}</div>
-          <div class="club-mood-result" aria-live="polite">${selection ? `<span>${escapeText(selection.album.title)}</span><strong>${escapeText(selection.title)}</strong><button type="button" data-action="mood-song">Open song ↗</button>` : ""}</div>
+          <div class="club-mood-result" aria-live="polite">${selection ? `<strong>${escapeText(selection.title)}</strong><button type="button" data-action="mood-song">Open ↗</button>` : ""}</div>
         </article>
       </div>
       <div class="club-play-grid">
         <article class="club-card club-quiz" id="clubQuiz">
-          <div class="club-card__top"><span>03 / THIRTEEN SECONDS</span><strong class="club-clock">${answered ? "DONE" : quizLive ? `${quizSeconds}s` : "13s"}</strong></div>
-          <h3>${escapeText(quiz.q)}</h3>
-          ${!quizLive && !answered ? `<button class="club-primary" type="button" data-action="start-quiz">Take the challenge ↗</button>` : ""}
+          <div class="club-card__top"><span>Quick quiz</span><strong class="club-clock">${answered ? "DONE" : quizLive ? `${quizSeconds}s` : "13s"}</strong></div>
+          <h3>${quizLive || answered ? escapeText(quiz.q) : "Know your eras?"}</h3>
+          ${!quizLive && !answered ? `<button class="club-primary" type="button" data-action="start-quiz">Play ↗</button>` : ""}
           ${quizLive && !answered ? `<div class="club-quiz__timer"><i style="animation-duration:${quizSeconds}s"></i></div><div class="club-options">${options.map((option,index) => `<button type="button" data-action="quiz-answer" data-index="${index}">${escapeText(option)}</button>`).join("")}</div>` : ""}
           ${answered ? `<div class="club-answer ${correct ? "correct" : ""}" role="status" tabindex="-1"><strong>${correct ? "You know it." : state.quizChoice === "timeout" ? "Time's up." : "Almost."}</strong><p>${escapeText(quiz.note)}</p></div>` : ""}
         </article>
         <article class="club-card club-vault ${state.vaultRevealed ? "open" : ""}">
-          <div class="club-card__top"><span>04 / FROM THE VAULT</span></div>
-          <h3>${state.vaultRevealed ? escapeText(vault.title) : "A little less<br>discovered."}</h3>
-          <p>${state.vaultRevealed ? escapeText(vault.analysis) : "One deep cut. Yours to uncover."}</p>
-          <button type="button" data-action="${state.vaultRevealed ? "vault-song" : "reveal-vault"}">${state.vaultRevealed ? "Open song ↗" : "Uncover a song ↗"}</button>
+          <h3>${state.vaultRevealed ? escapeText(vault.title) : "From the vault"}</h3>
+          <button type="button" data-action="${state.vaultRevealed ? "vault-song" : "reveal-vault"}">${state.vaultRevealed ? "Open ↗" : "Reveal ↗"}</button>
         </article>
       </div>
-      <footer class="club-section-title"><p>Your eras, at your pace.</p><button type="button" data-action="passport">${litCount} / 12 stamps · View passport ↗</button></footer>
     `;
     if (focusAction) {
       const replacement = [...root.querySelectorAll("[data-action]")].find((button) => button.dataset.action === focusAction && button.dataset.index === focusIndex);

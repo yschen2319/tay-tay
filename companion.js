@@ -697,7 +697,7 @@
     const todayBtn = document.getElementById("todaySongBtn");
     if (todayBtn) {
       const fresh = replaceListeners(todayBtn);
-      fresh.textContent = "Find your song ↗";
+      fresh.textContent = "Discover ↗";
       fresh.addEventListener("click", openRitual);
     }
 
