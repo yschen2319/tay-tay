@@ -39,8 +39,10 @@
   function save(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      return true;
     } catch {
       /* 隐私模式下静默失败 */
+      return false;
     }
   }
 
@@ -311,7 +313,7 @@
 
   /* ---------- 4. 通用弹窗 ---------- */
 
-  function openOverlay(className, html) {
+  function openOverlay(className, html, onClose = () => {}) {
     const trigger = document.activeElement;
     const overlay = document.createElement("div");
     overlay.className = `tt-overlay ${className}`;
@@ -327,6 +329,7 @@
     overlay.querySelector(".tt-overlay__close").focus();
     document.body.classList.add("modal-open");
     const close = () => {
+      onClose();
       overlay.remove();
       document.body.classList.remove("modal-open");
       document.removeEventListener("keydown", onKey);
@@ -465,21 +468,25 @@
         <textarea rows="3" placeholder="What does this song bring back?"></textarea>
         <div class="tt-memory__bar">
           <small class="tt-memory__state">${existing ? "Saved on this browser" : "Private to this browser"}</small>
-          <button type="button" class="tt-btn">Save</button>
+          <button type="button" class="tt-btn" data-save-note>Save</button>
+          <button type="button" class="tt-btn" data-note-map>View map</button>
         </div>
       `;
       const textarea = box.querySelector("textarea");
       const state = box.querySelector(".tt-memory__state");
       textarea.value = existing;
       const persist = () => {
-        const all = load(KEYS.notes, {});
         const text = textarea.value.trim();
-        if (text) all[key] = { text, title, albumId: album?.id, updated: Date.now() };
-        else delete all[key];
-        save(KEYS.notes, all);
-        state.textContent = text ? "Saved on this browser" : "Private to this browser";
+        const saved = writeNote(key, { text, title, albumId: album?.id });
+        state.textContent = saved ? (text ? "Saved on this browser" : "Private to this browser") : "Could not save. Try again.";
+        return saved;
       };
-      box.querySelector("button").addEventListener("click", persist);
+      box.querySelector("[data-save-note]").addEventListener("click", persist);
+      box.querySelector("[data-note-map]").addEventListener("click", () => {
+        if (!persist()) return;
+        closeSongModal();
+        openNotes(key);
+      });
       textarea.addEventListener("blur", persist);
       content.appendChild(box);
     }
@@ -559,6 +566,154 @@
   }
 
   /* ---------- 8. Your collection ---------- */
+
+  function writeNote(key, patch) {
+    const notes = load(KEYS.notes, {});
+    if (patch.text.trim()) notes[key] = { ...notes[key], ...patch, updated: Date.now() };
+    else {
+      delete notes[key];
+      Object.values(notes).forEach(note => {
+        if (Array.isArray(note.links)) note.links = note.links.filter(link => link !== key);
+      });
+    }
+    return save(KEYS.notes, notes);
+  }
+
+  function openNotes(initialKey) {
+    let selected = typeof initialKey === "string" ? initialKey : "";
+    let observer;
+    const catalog = allSongsFlat();
+    const { overlay, close } = openOverlay("tt-star", `
+      <p class="tt-eyebrow">My notes</p><h2>Your constellations.</h2>
+      <p class="star-subtitle">Songs connected by you.</p>
+      <div class="star-toolbar"><label>Find a note<select data-star-picker></select></label>
+        <button class="tt-btn" type="button" data-star-add>Add memory</button>
+        <button class="star-text" type="button" data-star-collection>Collection</button></div>
+      <form class="star-add" hidden><label>Choose a song<select name="song">${catalog.map((song, index) => `<option value="${index}">${escapeHtml(song.title)} · ${escapeHtml(song.album.title)}</option>`).join("")}</select></label><button class="tt-btn" type="submit">Open song</button><button class="star-text" type="button" data-star-cancel-add>Cancel</button></form>
+      <div class="star-layout"><div class="star-canvas"><svg class="star-edges" aria-hidden="true"></svg><div class="star-nodes"></div></div><aside class="star-detail" aria-label="Selected memory"></aside></div>
+      <p class="star-foot">Private to this browser.</p>
+      <p class="star-status" role="status"></p>
+    `, () => observer?.disconnect());
+    const body = overlay.querySelector(".tt-overlay__body");
+    const picker = overlay.querySelector("[data-star-picker]");
+    const detail = overlay.querySelector(".star-detail");
+    const canvas = overlay.querySelector(".star-canvas");
+    let entries = [];
+    let visible = [];
+    let editing = false;
+    const tags = note => Array.isArray(note.tags) ? note.tags.filter(tag => typeof tag === "string") : [];
+    const links = note => Array.isArray(note.links) ? note.links : [];
+    const shared = (a, b) => tags(a).filter(tag => tags(b).some(other => other.toLowerCase() === tag.toLowerCase()));
+    const linked = (a, b) => links(a).includes(b.key) || links(b).includes(a.key);
+    const related = (a, b) => a.key !== b.key && (linked(a, b) || shared(a, b).length);
+    const status = text => { overlay.querySelector(".star-status").textContent = text; };
+    const songFor = note => catalog.find(song => songKey(song.title) === note.key && song.album.id === note.albumId) || catalog.find(song => songKey(song.title) === note.key);
+    function draw() {
+      if (!visible.length) return;
+      const width = canvas.clientWidth, height = canvas.clientHeight;
+      const positions = visible.map((note, index) => {
+        if (width <= 420) {
+          if (!index) return { x: width / 2, y: 55 };
+          return { x: index % 2 ? 56 : width - 56, y: 190 + Math.floor((index - 1) / 2) * 140 };
+        }
+        if (!index) return { x: width / 2, y: height / 2 };
+        const angle = -Math.PI / 2 + (index - 1) * Math.PI * 2 / (visible.length - 1);
+        return { x: width / 2 + Math.cos(angle) * (width / 2 - 68), y: height / 2 + Math.sin(angle) * (height / 2 - 56) };
+      });
+      overlay.querySelectorAll(".star-node").forEach((node, i) => {
+        node.style.left = `${positions[i].x}px`; node.style.top = `${positions[i].y}px`;
+      });
+      const svg = overlay.querySelector(".star-edges");
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = visible.slice(1).map((note, index) => {
+        if (!related(visible[0], note)) return "";
+        const a = positions[0], b = positions[index + 1];
+        return `<path class="${linked(visible[0], note) ? "is-manual" : ""}" d="M${a.x} ${a.y} Q${(a.x + b.x) / 2 + 15} ${(a.y + b.y) / 2 - 15} ${b.x} ${b.y}"/>`;
+      }).join("");
+    }
+    function render() {
+      entries = Object.entries(load(KEYS.notes, {})).filter(([, note]) => note && typeof note.text === "string" && note.text.trim()).map(([key, note]) => ({ ...note, key, title: note.title || key })).sort((a, b) => (b.updated || 0) - (a.updated || 0));
+      if (!entries.some(note => note.key === selected)) selected = entries[0]?.key;
+      picker.innerHTML = entries.map(note => `<option value="${escapeHtml(note.key)}">${escapeHtml(note.title)}</option>`).join("");
+      picker.value = selected || "";
+      picker.disabled = !entries.length || editing;
+      body.classList.toggle("star-empty", !entries.length);
+      const current = entries.find(note => note.key === selected);
+      if (!current) {
+        visible = [];
+        overlay.querySelector(".star-nodes").innerHTML = '<p class="star-empty-message">Your first memory starts with a song.</p>';
+        overlay.querySelector(".star-edges").innerHTML = "";
+        detail.innerHTML = "";
+        return;
+      }
+      const neighbors = entries.filter(note => related(current, note));
+      visible = [current, ...neighbors.slice(0, 6)];
+      if (visible.length < 7) visible.push(...entries.filter(note => note.key !== selected && !neighbors.includes(note)).slice(0, 7 - visible.length));
+      overlay.querySelector(".star-nodes").innerHTML = visible.map(note => `<button class="star-node" type="button" data-star-note="${escapeHtml(note.key)}" aria-pressed="${note.key === selected}" ${editing ? "disabled" : ""}><strong>${escapeHtml(note.title)}</strong><small>${escapeHtml(tags(note).join(" · ") || "Memory")}</small></button>`).join("");
+      const song = songFor(current);
+      if (editing) {
+        detail.innerHTML = `<form class="star-edit"><h3>${escapeHtml(current.title)}</h3><label>Your note<textarea name="text" rows="6" required></textarea></label><label>Tags<input name="tags" placeholder="Summer, home, becoming"></label><div class="star-edit-actions"><button class="tt-btn" type="submit">Save</button><button class="star-text" type="button" data-star-cancel>Cancel</button></div></form>`;
+        detail.querySelector("textarea").value = current.text;
+        detail.querySelector("input").value = tags(current).join(", ");
+      } else {
+        detail.innerHTML = `<small>${escapeHtml(song?.album.title || "Your memory")}</small><h3>${escapeHtml(current.title)}</h3><p class="star-note-text"></p><div class="star-tags">${escapeHtml(tags(current).join(" · "))}</div>
+          <div class="star-edit-actions"><button class="star-text" type="button" data-star-edit>Edit memory</button>${song ? '<button class="star-text" type="button" data-star-song>Open song</button>' : ""}</div>
+          <section class="star-connections"><h4>Connected memories</h4>${neighbors.length ? neighbors.map(note => `<div class="star-connection"><button class="star-text" type="button" data-star-note="${escapeHtml(note.key)}">${escapeHtml(note.title)}<small>${escapeHtml(shared(current, note).join(" · ") || "Linked by you")}</small></button>${linked(current, note) ? `<button class="star-unlink" type="button" data-star-unlink="${escapeHtml(note.key)}" aria-label="Unlink ${escapeHtml(note.title)}">Unlink</button>` : ""}</div>`).join("") : '<p class="star-muted">Add a tag or link a memory.</p>'}</section>
+          <form class="star-link"><label>Link a memory<select name="target" required><option value="">Choose a note</option>${entries.filter(note => note.key !== selected && !linked(current, note)).map(note => `<option value="${escapeHtml(note.key)}">${escapeHtml(note.title)}</option>`).join("")}</select></label><button class="tt-btn" type="submit" ${entries.filter(note => note.key !== selected && !linked(current, note)).length ? "" : "disabled"}>Link</button></form>
+          ${neighbors.length > 6 ? `<small class="star-muted">6 of ${neighbors.length} connections on map</small>` : ""}`;
+        detail.querySelector(".star-note-text").textContent = current.text;
+      }
+      draw();
+    }
+    function connect(target, remove) {
+      const notes = load(KEYS.notes, {});
+      if (!notes[selected] || !notes[target]) return;
+      for (const [from, to] of [[selected, target], [target, selected]]) {
+        notes[from].links = links(notes[from]).filter(key => key !== to);
+        if (!remove) notes[from].links.push(to);
+      }
+      if (!save(KEYS.notes, notes)) return status("Could not save. Try again.");
+      render(); status(remove ? (shared(notes[selected], notes[target]).length ? "Link removed. Shared tags still connect." : "Link removed.") : "Memory linked.");
+    }
+    picker.addEventListener("change", () => { selected = picker.value; render(); status(""); });
+    body.addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      if (button.hasAttribute("data-star-add")) { overlay.querySelector(".star-add").hidden = false; overlay.querySelector('.star-add select').focus(); }
+      if (button.hasAttribute("data-star-cancel-add")) overlay.querySelector(".star-add").hidden = true;
+      if (button.hasAttribute("data-star-collection")) { close(); openTrajectory(); }
+      if (button.dataset.starNote) {
+        selected = button.dataset.starNote; render();
+        detail.querySelector("h3").setAttribute("tabindex", "-1");
+        detail.querySelector("h3").focus({ preventScroll: true });
+        if (matchMedia("(max-width: 900px)").matches) detail.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        status("");
+      }
+      if (button.hasAttribute("data-star-edit")) { editing = true; render(); detail.querySelector("textarea").focus(); }
+      if (button.hasAttribute("data-star-cancel")) { editing = false; render(); detail.querySelector("[data-star-edit]").focus(); }
+      if (button.hasAttribute("data-star-song")) jumpToSong(songFor(entries.find(note => note.key === selected)), close);
+      if (button.dataset.starUnlink) connect(button.dataset.starUnlink, true);
+    });
+    body.addEventListener("submit", event => {
+      event.preventDefault();
+      const form = event.target;
+      if (form.matches(".star-add")) {
+        jumpToSong(catalog[Number(form.elements.song.value)], close);
+        document.querySelector(".tt-memory textarea")?.focus();
+      }
+      if (form.matches(".star-link")) connect(form.elements.target.value, false);
+      if (form.matches(".star-edit")) {
+        const text = form.elements.text.value.trim();
+        if (!text) return status("Write a memory first.");
+        const newTags = [...new Set(form.elements.tags.value.split(",").map(tag => tag.trim().toLowerCase()).filter(Boolean))];
+        if (!writeNote(selected, { text, tags: newTags })) return status("Could not save. Try again.");
+        editing = false; render(); status("Memory saved."); detail.querySelector("[data-star-edit]").focus();
+      }
+    });
+    render();
+    observer = new ResizeObserver(draw);
+    observer.observe(canvas);
+  }
 
   function openTrajectory() {
     const read = readSongSet();
@@ -763,6 +918,7 @@
     openRitual,
     openPassport,
     openTrajectory,
+    openNotes,
     songOfDay,
     weeklyTheme
   };

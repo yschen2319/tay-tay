@@ -1760,9 +1760,9 @@ document.querySelectorAll("[data-site-home], [data-site-explore], [data-site-dai
 // Keep keyboard navigation inside whichever reading panel is open.
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Tab") return;
-  const dialog = [...document.querySelectorAll('[role="dialog"]')].find((element) => element.getClientRects().length);
+  const dialog = [...document.querySelectorAll('[role="dialog"]')].reverse().find((element) => element.getClientRects().length && !element.closest('[aria-hidden="true"]'));
   if (!dialog) return;
-  const controls = [...dialog.querySelectorAll('button, a[href], textarea, input, [tabindex="0"]')].filter((element) => element.getClientRects().length && !element.disabled);
+  const controls = [...dialog.querySelectorAll('button, a[href], textarea, input, select, [tabindex="0"]')].filter((element) => element.getClientRects().length && !element.disabled);
   const first = controls[0], last = controls[controls.length - 1];
   if (!first) return;
   if (!dialog.contains(document.activeElement) || (!event.shiftKey && document.activeElement === last)) {

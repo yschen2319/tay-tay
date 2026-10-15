@@ -395,7 +395,7 @@
     } else if (action === "passport") {
       window.SwiftieCompanion?.openPassport();
     } else if (action === "trail") {
-      window.SwiftieCompanion?.openTrajectory();
+      window.SwiftieCompanion?.openNotes();
     } else if (action === "today-song") {
       openSong(songOfDay());
     } else if (action === "start-quiz") {
@@ -441,7 +441,7 @@
       const target = event.target.closest("[data-action]");
       if (target) handleAction(target);
     });
-    document.querySelectorAll("[data-open-collection]").forEach(button => button.addEventListener("click", () => window.SwiftieCompanion?.openTrajectory()));
+    document.querySelectorAll("[data-open-collection]").forEach(button => button.addEventListener("click", () => window.SwiftieCompanion?.openNotes()));
     render();
     window.addEventListener("storage", render);
     document.addEventListener("visibilitychange", () => {
