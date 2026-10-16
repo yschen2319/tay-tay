@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preload" href="./assets/fonts/nunito-variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" as="image" href="./assets/era-path-hero.png" />
+    <link rel="preload" as="image" href="./assets/bracelet-beads.webp?v=1" />
+    <link rel="preload" as="image" href="./assets/bracelet-cord.webp" />
     <title>The Eras — A Taylor Swift Archive</title>
     <meta
       name="description"
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./companion.css" />
     <link rel="stylesheet" href="./clubhouse.css" />
-    <link rel="stylesheet" href="./art.css" />
+    <link rel="stylesheet" href="./art.css?v=bracelet-8" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   </head>
   <body>
@@ -37,24 +38,34 @@
 
     <header class="site-header">
       <a class="site-wordmark" href="#top" data-site-home>TAYLOR SWIFT</a>
-      <nav aria-label="Main navigation"><a href="#albumCollection" data-site-explore>Albums</a><a href="#swiftieClub" data-site-daily>Discover</a><button type="button" data-open-collection>My notes</button></nav>
+      <nav aria-label="Main navigation"><a href="#top" data-site-tab="home">首页</a><a href="#discover" data-site-tab="discover">发现</a><a href="#mine" data-site-tab="mine">我的</a></nav>
     </header>
     <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-content">
-          <div><p class="hero-kicker">An independent fan archive</p><h1 id="hero-title">The album archive.</h1><p class="lead">Songs, stories &amp; your own notes.</p></div>
-          <div class="hero-intro">
-            <div class="hero-actions"><a class="button primary" href="#albumCollection" data-site-explore>Explore albums ↓</a></div>
-          </div>
+      <section class="friendship-home" aria-labelledby="hero-title">
+        <h1 id="hero-title">The Eras</h1>
+        <div class="era-wheel" id="albumCollection" role="group" aria-label="专辑友谊手链">
+          <img class="era-cord" src="./assets/bracelet-cord.webp" alt="" width="1254" height="1254" fetchpriority="high" />
+          <div id="eraBeads"></div>
         </div>
-        <div class="hero-art" role="img" aria-label="A painted path through twelve colourful musical worlds"></div>
-        <div class="collection-heading" id="albumCollection"><h2>Albums</h2><p>Choose an era ↘</p></div>
-        <nav class="hero-map" id="heroMap" aria-label="Explore all twelve albums"></nav>
+        <div class="era-caption" aria-live="polite" aria-atomic="true">
+          <h2 id="eraTitle">Lover</h2><p id="eraYear">2019</p>
+        </div>
+        <a class="era-enter" id="eraEnter" href="#album-lover">进入专辑<img src="./assets/icons/caret-right.svg" alt="" width="20" height="20" /></a>
       </section>
 
       <section id="swiftieClub" class="swiftie-club" aria-label="Discover songs and activities">
         <div id="clubApp" class="club-app">
           <p class="club-loading">Loading…</p>
+        </div>
+      </section>
+
+      <section id="mySpace" class="my-space section-pad" aria-labelledby="my-title">
+        <p class="my-eyebrow">YOUR LITTLE CORNER</p>
+        <h1 id="my-title">我的</h1>
+        <div class="my-links">
+          <button type="button" data-personal="openNotes"><img src="./assets/icons/notebook.svg" alt="" /><span><strong>我的便签</strong><small>留给歌曲的心里话</small></span><img src="./assets/icons/caret-right.svg" alt="" /></button>
+          <button type="button" data-personal="openTrajectory"><img src="./assets/icons/heart.svg" alt="" /><span><strong>收藏与足迹</strong><small>那些反复回到的时代</small></span><img src="./assets/icons/caret-right.svg" alt="" /></button>
+          <button type="button" data-personal="openPassport"><img src="./assets/icons/stamp.svg" alt="" /><span><strong>专辑护照</strong><small>收集你的时代印记</small></span><img src="./assets/icons/caret-right.svg" alt="" /></button>
         </div>
       </section>
 
@@ -94,10 +105,17 @@
       </section>
     </main>
 
+    <nav class="site-tabs" aria-label="底部导航">
+      <a href="#top" data-site-tab="home" aria-current="page"><img src="./assets/icons/house.svg" alt="" width="26" height="26" /><span>首页</span></a>
+      <a href="#discover" data-site-tab="discover"><img src="./assets/icons/compass.svg" alt="" width="26" height="26" /><span>发现</span></a>
+      <a href="#mine" data-site-tab="mine"><img src="./assets/icons/user.svg" alt="" width="26" height="26" /><span>我的</span></a>
+    </nav>
+
     <script src="./lyrics.js"></script>
     <script src="./prose.js"></script>
-    <script src="./app.js"></script>
+    <script src="./app.js?v=bracelet-4"></script>
     <script src="./companion.js"></script>
     <script src="./clubhouse.js"></script>
+    <script src="./friendship.js?v=bracelet-6"></script>
   </body>
 </html>

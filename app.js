@@ -142,8 +142,8 @@ let applyingHistoryState = false;
 
 const landingCopy = {
   micro: "",
-  title: "The album archive.",
-  titleHtml: 'The album archive.',
+  title: "The Eras",
+  titleHtml: 'The Eras',
   lead: "Songs, stories & your own notes.",
   primary: "Explore albums ↓",
   secondary: ""
@@ -323,7 +323,8 @@ function appHistoryState(view = "landing", albumIndex = currentAlbumIndex, secti
     swiftStory: true,
     view,
     album: album?.id || albums[0].id,
-    section: section || "guide"
+    section: section || "guide",
+    tab: document.body.dataset.siteTab || "home"
   };
 }
 
@@ -352,7 +353,7 @@ function applyRouteState(state) {
       if (target) window.scrollTo({ top: target.offsetTop, behavior: "auto" });
     });
   } else {
-    showLanding({ preserveHistory: true });
+    showLanding({ preserveHistory: true, tab: state?.tab || landingTabFromHash() });
   }
   applyingHistoryState = false;
 }
@@ -363,12 +364,25 @@ function initializeHistoryState() {
     const index = getAlbumIndexFromHash();
     replaceAppHistory(appHistoryState("album", index, activeAlbumSection), `#album-${albums[index].id}`);
   } else {
-    replaceAppHistory(appHistoryState("landing"), window.location.pathname + window.location.search);
+    replaceAppHistory(appHistoryState("landing"), window.location.pathname + window.location.search + window.location.hash);
   }
+}
+
+function landingTabFromHash() {
+  return location.hash === "#discover" || location.hash === "#mine" ? location.hash.slice(1) : "home";
+}
+
+function setSiteTab(tab) {
+  document.body.dataset.siteTab = tab;
+  document.querySelectorAll("a[data-site-tab]").forEach(link => {
+    if (link.dataset.siteTab === tab) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
 }
 
 function showLanding(options = {}) {
   applyLandingCopy();
+  setSiteTab(options.tab || landingTabFromHash());
   const stage = document.querySelector("#albums");
   document.body.classList.add("landing-mode");
   document.body.classList.remove("album-mode", "album-hub-mode", "album-section-mode", "modal-open", "reading-open");
@@ -383,7 +397,7 @@ function showLanding(options = {}) {
     item.dataset.preview = "false";
   });
   if (!options.preserveHistory) {
-    const landingUrl = window.location.pathname + window.location.search;
+    const landingUrl = window.location.pathname + window.location.search + (document.body.dataset.siteTab === "home" ? "" : `#${document.body.dataset.siteTab}`);
     if (options.pushHistory) {
       pushAppHistory(appHistoryState("landing"), landingUrl);
     } else if (window.location.hash.startsWith("#album-")) {
@@ -749,6 +763,7 @@ function renderCurrentAlbum() {
 }
 
 renderCurrentAlbum = function () {
+  setSiteTab("home");
   const stage = document.querySelector("#albums");
   const album = albums[currentAlbumIndex];
   const prev = albums[(currentAlbumIndex - 1 + albums.length) % albums.length];
@@ -1606,7 +1621,7 @@ window.addEventListener("popstate", (event) => {
 window.addEventListener("hashchange", () => {
   if (window.location.hash.startsWith("#album-")) {
     selectAlbum(getAlbumIndexFromHash(), { fromHash: true, skipHistory: true });
-  } else if (!window.location.hash || window.location.hash === "#top") {
+  } else if (!window.location.hash || ["#top", "#discover", "#mine"].includes(window.location.hash)) {
     showLanding({ preserveHistory: true });
   }
 });
@@ -1752,7 +1767,7 @@ document.querySelectorAll("[data-site-home], [data-site-explore], [data-site-dai
   link.addEventListener("click", (event) => {
     event.preventDefault();
     const target = link.hasAttribute("data-site-explore") ? "#albumCollection" : link.hasAttribute("data-site-daily") ? "#swiftieClub" : "#top";
-    showLanding({ pushHistory: document.body.classList.contains("album-mode") });
+    showLanding({ tab: link.hasAttribute("data-site-daily") ? "discover" : "home", pushHistory: true });
     requestAnimationFrame(() => document.querySelector(target)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }));
   });
 });
